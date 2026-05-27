@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        color-scheme: light;
+    }
+
+    html,
+    body {
+        background-color: #FAFAF7;
+        color: #2F3441;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+    }
+
+    ::selection {
+        background-color: rgba(99, 102, 241, 0.18);
+        color: #2F3441;
+    }
+}
+
+@layer utilities {
+    .calm-gradient {
+        background:
+            radial-gradient(1200px 600px at 80% -10%, rgba(99, 102, 241, 0.07), transparent 60%),
+            radial-gradient(900px 500px at -10% 110%, rgba(163, 177, 138, 0.10), transparent 60%);
+    }
+
+    .grain {
+        background-image: radial-gradient(rgba(47, 52, 65, 0.025) 1px, transparent 1px);
+        background-size: 3px 3px;
+    }
+}

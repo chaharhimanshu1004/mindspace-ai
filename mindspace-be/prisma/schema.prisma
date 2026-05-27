@@ -1,0 +1,160 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [pgvector(map: "vector"), pg_trgm]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authTokens    AuthToken[]
+  memories      Memory[]
+  entities      Entity[]
+  conversations Conversation[]
+
+  @@map("users")
+}
+
+model AuthToken {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  token     String   @unique
+  status    String   @default("active")
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@map("auth_tokens")
+}
+
+model Memory {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    Int
+  content   String   @db.Text
+
+  title   String?
+  summary String?
+  topics  String[] @default([])
+
+  status String @default("pending")
+
+  clusterId Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chunks      MemoryChunk[]
+  entityLinks MemoryEntity[]
+  edgesOut    MemoryEdge[]   @relation("EdgeSrc")
+  edgesIn     MemoryEdge[]   @relation("EdgeDst")
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, status])
+  @@index([userId, clusterId])
+  @@map("memories")
+}
+
+model MemoryChunk {
+  id         String   @id @default(uuid()) @db.Uuid
+  memoryId   String   @db.Uuid
+  userId     Int
+  chunkIndex Int      @default(0)
+  content    String   @db.Text
+  createdAt  DateTime @default(now())
+
+  memory Memory @relation(fields: [memoryId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("memory_chunks")
+}
+
+model Entity {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       Int
+  name         String
+  entityType   String
+  description  String?  @db.Text
+  mentionCount Int      @default(1)
+  firstSeen    DateTime @default(now())
+  lastSeen     DateTime @default(now())
+
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  memoryLinks MemoryEntity[]
+
+  @@unique([userId, name, entityType])
+  @@index([userId])
+  @@map("entities")
+}
+
+model MemoryEntity {
+  memoryId String @db.Uuid
+  entityId String @db.Uuid
+  userId   Int
+  salience Float  @default(0.5)
+
+  memory Memory @relation(fields: [memoryId], references: [id], onDelete: Cascade)
+  entity Entity @relation(fields: [entityId], references: [id], onDelete: Cascade)
+
+  @@id([memoryId, entityId])
+  @@index([entityId])
+  @@map("memory_entities")
+}
+
+model MemoryEdge {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    Int
+  srcId     String   @db.Uuid
+  dstId     String   @db.Uuid
+  relation  String
+  weight    Float
+  evidence  String?  @db.Text
+  createdAt DateTime @default(now())
+
+  src Memory @relation("EdgeSrc", fields: [srcId], references: [id], onDelete: Cascade)
+  dst Memory @relation("EdgeDst", fields: [dstId], references: [id], onDelete: Cascade)
+
+  @@unique([srcId, dstId, relation])
+  @@index([userId, srcId])
+  @@index([userId, dstId])
+  @@map("memory_edges")
+}
+
+model Conversation {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    Int
+  title     String?
+  createdAt DateTime @default(now())
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages Message[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id             String   @id @default(uuid()) @db.Uuid
+  conversationId String   @db.Uuid
+  role           String
+  content        String   @db.Text
+  retrievedIds   String[] @db.Uuid @default([])
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+  @@map("messages")
+}
