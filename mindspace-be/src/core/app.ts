@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { env } from "../config/env";
+import morgan from "morgan"
 import authRouter from "../routes/auth.route";
 import memoryRouter from "../routes/memory.route";
 import { errorHandler } from "../middlewares/error-handler";
@@ -16,6 +17,7 @@ export const createApp = (): Express => {
     app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
     app.use(express.json({ limit: "1mb" }));
     app.use(cookieParser());
+    app.use(morgan("dev"));
 
     app.get("/health", (_req, res) => {
         res.json({ status: "ok" });
