@@ -1,7 +1,6 @@
 import axios, { type AxiosRequestConfig } from "axios";
 
 import { env } from "@/config/env";
-import { authStorage } from "@/features/auth/auth.storage";
 import { ApiError } from "./api-error";
 
 interface RequestArgs {
@@ -11,22 +10,11 @@ interface RequestArgs {
     auth?: boolean;
 }
 
-const buildHeaders = (auth: boolean): Record<string, string> => {
-    const headers: Record<string, string> = {};
-
-    if (auth) {
-        const token = authStorage.get();
-        if (token) headers["Authorization"] = `Bearer ${token}`;
-    }
-
-    return headers;
-};
-
 export const apiClient = async <T>(args: RequestArgs): Promise<T> => {
     const config: AxiosRequestConfig = {
         method: args.method ?? "GET",
         url: `${env.apiUrl}${args.path}`,
-        headers: buildHeaders(args.auth ?? false),
+        withCredentials: true,
         data: args.body,
     };
 

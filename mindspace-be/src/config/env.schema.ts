@@ -15,6 +15,9 @@ export const envSchema = z.object({
     CORS_ORIGIN: z.string().default("http://localhost:3000"),
 
     BCRYPT_ROUNDS: z.coerce.number().int().min(8).max(15).default(12),
+
+    COOKIE_NAME: z.string().default("mindspace.token"),
+    COOKIE_DOMAIN: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

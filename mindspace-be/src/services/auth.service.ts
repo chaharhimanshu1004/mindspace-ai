@@ -7,8 +7,7 @@ import { toPublicUser } from "../utils/auth.mapper";
 import { parseDurationMs } from "../utils/duration";
 import { emailTakenError, invalidCredentialsError } from "../errors/auth-errors";
 
-import type { LoginInput } from "../schemas/login.schema";
-import type { SignupInput } from "../schemas/signup.schema";
+import type { LoginInput, SignupInput } from "../schemas/auth.schema";
 import type { AuthSession, JwtPayload } from "../schemas/auth.types";
 
 export class AuthService {

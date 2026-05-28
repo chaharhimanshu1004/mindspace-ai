@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 import { signupApi } from "../api/signup.api";
-import { authStorage } from "../auth.storage";
 import { useAuth } from "../use-auth";
 import { ApiError } from "@/lib/api-error";
 
@@ -16,9 +15,8 @@ export const useSignup = () => {
     return useMutation({
         mutationFn: (args: { email: string; password: string }) => signupApi(args),
         onSuccess: (session) => {
-            authStorage.set(session.token);
             setUser(session.user);
-            router.push("/app");
+            router.push("/memories");
         },
         onError: (error) => {
             const message =
