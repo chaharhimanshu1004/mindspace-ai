@@ -8,10 +8,8 @@ node_modules/
 .yarn/install-state.gz
 
 .env
-.env.local
 .env.development
 .env.production
-.env.qa
 
 dist/
 build/

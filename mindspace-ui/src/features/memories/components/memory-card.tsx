@@ -1,4 +1,5 @@
 import { relativeTime } from "@/lib/relative-time";
+import { formatIst } from "@/lib/format-date";
 import { MemoryStatusBadge } from "./memory-status-badge";
 import type { Memory } from "../memory.types";
 
@@ -45,7 +46,12 @@ export function MemoryCard({ memory }: Props) {
             ) : null}
 
             <footer className="mt-auto pt-2 text-xs text-ink-subtle">
-                {relativeTime(memory.createdAt)}
+                <time
+                    dateTime={memory.createdAt}
+                    title={formatIst(memory.createdAt)}
+                >
+                    {relativeTime(memory.createdAt)}
+                </time>
             </footer>
         </article>
     );
