@@ -18,6 +18,8 @@ export const envSchema = z.object({
 
     COOKIE_NAME: z.string().default("mindspace.token"),
     COOKIE_DOMAIN: z.string().optional(),
+
+    REDIS_URL: z.string().min(1).default("redis://localhost:6379"),
 });
 
 export type Env = z.infer<typeof envSchema>;
