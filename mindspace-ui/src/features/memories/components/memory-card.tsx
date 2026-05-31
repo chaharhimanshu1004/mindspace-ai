@@ -29,7 +29,7 @@ export function MemoryCard({ memory }: Props) {
             </header>
 
             <p className="text-ink-muted text-sm leading-relaxed whitespace-pre-wrap line-clamp-6">
-                {memory.summary ?? memory.content}
+                {memory.content}
             </p>
 
             {memory.topics.length > 0 ? (
