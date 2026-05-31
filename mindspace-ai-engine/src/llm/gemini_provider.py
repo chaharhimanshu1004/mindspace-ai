@@ -11,6 +11,9 @@ from .provider import (
     EmbedRequest,
     EmbedResponse,
     LLMProvider,
+    StructuredRequest,
+    StructuredResponse,
+    T,
 )
 
 
@@ -67,3 +70,30 @@ class GeminiProvider(LLMProvider):
             raise RuntimeError(f"Gemini returned empty completion for model {model}")
 
         return CompleteResponse(text=text, model=model)
+
+    async def complete_structured(
+        self, req: StructuredRequest[T]
+    ) -> StructuredResponse[T]:
+        model = req.model or self._default_chat
+
+        response_schema = req.wire_schema if req.wire_schema is not None else req.schema
+
+        config = gtypes.GenerateContentConfig(
+            temperature=req.temperature,
+            max_output_tokens=req.max_output_tokens,
+            system_instruction=req.system,
+            response_mime_type="application/json",
+            response_schema=response_schema,
+        )
+        result = await self._client.aio.models.generate_content(
+            model=model,
+            contents=req.prompt,
+            config=config,
+        )
+
+        raw = (result.text or "").strip()
+        if not raw:
+            raise RuntimeError(f"Gemini returned empty structured output for model {model}")
+
+        parsed = req.schema.model_validate_json(raw)
+        return StructuredResponse(parsed=parsed, model=model)

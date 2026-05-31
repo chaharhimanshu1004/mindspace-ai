@@ -7,9 +7,10 @@ from src.config import env
 from src.connectors.stream_consumer import StreamConsumer, StreamMessage
 from src.db.postgres import SessionFactory
 from src.db.redis import redis
-from src.models import MemoryStatus
+from src.models import Memory, MemoryStatus
 from src.schemas.enrich_job import EnrichJobPayload
 from src.services.embed_service import EmbedResult, EmbedService
+from src.services.enrichment_service import EnrichmentBundle, EnrichmentService
 from src.services.memory_service import MemoryService
 from src.utils.logger import get_logger
 from src.utils.stream_keys import ConsumerGroups, StreamKeys
@@ -102,28 +103,40 @@ class EnrichmentWorker:
             await self._maybe_dead_letter(message, payload)
 
     async def _process(self, payload: EnrichJobPayload) -> None:
-        logger.info("Processing memory %s — phase 1: claim", payload.memoryId)
         snapshot = await self._claim(payload)
         if snapshot is None:
             return
 
         memory_id, user_id, content = snapshot
+
+        await self._run_stage_a(memory_id=memory_id, user_id=user_id, content=content) # vector embedding
+        await self._run_stage_b(memory_id=memory_id, user_id=user_id, content=content) # enrichment -> title, summary, topics
+
+        logger.info("Processing memory %s — done", memory_id)
+
+    async def _run_stage_b(
+        self, memory_id: UUID, user_id: int, content: str
+    ) -> None:
+        if await self._stage_already_done(memory_id, MemoryStatus.ENRICHED):
+            logger.info("Memory %s — Stage B already done; skipping", memory_id)
+            return
+        logger.info("Memory %s — Stage B: enrich", memory_id)
+        bundle = await EnrichmentService.enrich(content=content)
         logger.info(
-            "Processing memory %s — phase 2: embed (content_len=%d)",
+            "Memory %s — Stage B enrich done (model=%s, entities=%d)",
             memory_id,
-            len(content),
-        )
-        result = await EmbedService.embed(content=content)
-        logger.info(
-            "Processing memory %s — phase 2 done (model=%s, chunks=%d)",
-            memory_id,
-            result.model,
-            len(result.chunks),
+            bundle.model,
+            len(bundle.result.entities),
         )
 
-        logger.info("Processing memory %s — phase 3: write", memory_id)
-        await self._write(memory_id=memory_id, user_id=user_id, result=result)
-        logger.info("Processing memory %s — done", memory_id)
+        await self._write_enrichment(
+            memory_id=memory_id, user_id=user_id, bundle=bundle
+        )
+        logger.info("Memory %s — Stage B persisted (status=enriched)", memory_id)
+
+    _RESUMABLE_STATUSES = frozenset(
+        {MemoryStatus.PENDING.value, MemoryStatus.EMBEDDED.value}
+    )
 
     async def _claim(
         self, payload: EnrichJobPayload
@@ -139,7 +152,7 @@ class EnrichmentWorker:
                 )
                 return None
 
-            if memory.status != MemoryStatus.PENDING.value:
+            if memory.status not in self._RESUMABLE_STATUSES:
                 logger.info(
                     "Memory %s already in status '%s'; skipping",
                     memory.id,
@@ -149,7 +162,46 @@ class EnrichmentWorker:
 
             return memory.id, memory.user_id, memory.content
 
-    async def _write(
+    async def _run_stage_a(
+        self, memory_id: UUID, user_id: int, content: str
+    ) -> None:
+        if await self._stage_already_done(memory_id, MemoryStatus.EMBEDDED):
+            logger.info("Memory %s — Stage A already done; skipping", memory_id)
+            return
+        logger.info(
+            "Memory %s — Stage A: embed (content_len=%d)", memory_id, len(content)
+        )
+        result = await EmbedService.embed(content=content)
+        logger.info(
+            "Memory %s — Stage A embed done (model=%s, chunks=%d)",
+            memory_id,
+            result.model,
+            len(result.chunks),
+        )
+
+        await self._write_embed(memory_id=memory_id, user_id=user_id, result=result)
+        logger.info("Memory %s — Stage A persisted (status=embedded)", memory_id)
+
+    _STATUS_ORDER = (
+        MemoryStatus.PENDING.value,
+        MemoryStatus.EMBEDDED.value,
+        MemoryStatus.ENRICHED.value,
+        MemoryStatus.LINKED.value,
+    )
+
+    async def _stage_already_done(
+        self, memory_id: UUID, at_least: MemoryStatus
+    ) -> bool:
+        async with SessionFactory() as session:
+            memory = await session.get(Memory, memory_id)
+            if memory is None:
+                return False
+            try:
+                return self._STATUS_ORDER.index(memory.status) >= self._STATUS_ORDER.index(at_least.value)
+            except ValueError:
+                return False
+
+    async def _write_embed(
         self,
         memory_id: UUID,
         user_id: int,
@@ -161,6 +213,20 @@ class EnrichmentWorker:
                 memory_id=memory_id,
                 user_id=user_id,
                 result=result,
+            )
+
+    async def _write_enrichment(
+        self,
+        memory_id: UUID,
+        user_id: int,
+        bundle: EnrichmentBundle,
+    ) -> None:
+        async with SessionFactory() as session, session.begin():
+            await EnrichmentService.persist(
+                session=session,
+                memory_id=memory_id,
+                user_id=user_id,
+                bundle=bundle,
             )
 
     async def _maybe_dead_letter(

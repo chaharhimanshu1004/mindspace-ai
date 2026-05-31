@@ -6,6 +6,7 @@ import { env } from "../config/env";
 import morgan from "morgan"
 import authRouter from "../routes/auth.route";
 import memoryRouter from "../routes/memory.route";
+import chatRouter from '../routes/chat.route'
 import { errorHandler } from "../middlewares/error-handler";
 import { notFoundHandler } from "../middlewares/not-found";
 
@@ -25,6 +26,7 @@ export const createApp = (): Express => {
 
     app.use("/api/auth", authRouter);
     app.use("/api/memories", memoryRouter);
+    app.use("/api/chat", chatRouter);
 
     app.use(notFoundHandler);
     app.use(errorHandler);

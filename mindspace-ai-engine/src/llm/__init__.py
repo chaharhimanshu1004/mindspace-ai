@@ -1,4 +1,12 @@
-from .provider import LLMProvider, EmbedRequest, EmbedResponse, CompleteRequest, CompleteResponse
+from .provider import (
+    CompleteRequest,
+    CompleteResponse,
+    EmbedRequest,
+    EmbedResponse,
+    LLMProvider,
+    StructuredRequest,
+    StructuredResponse,
+)
 from .registry import LLMRegistry, get_provider
 
 __all__ = [
@@ -7,6 +15,8 @@ __all__ = [
     "EmbedResponse",
     "CompleteRequest",
     "CompleteResponse",
+    "StructuredRequest",
+    "StructuredResponse",
     "LLMRegistry",
     "get_provider",
 ]

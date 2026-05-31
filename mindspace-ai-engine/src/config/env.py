@@ -30,7 +30,12 @@ class Env(BaseSettings):
     STREAM_BLOCK_MS: int = Field(default=5000, gt=0)
     STREAM_BATCH_SIZE: int = Field(default=1, gt=0)
     MAX_DELIVERIES: int = Field(default=5, gt=0)
-    STAGE_TIMEOUT_SECONDS: int = Field(default=60, gt=0)
+    STAGE_TIMEOUT_SECONDS: int = Field(default=90, gt=0)
+
+    ENTITY_DEDUP_COSINE: float = Field(default=0.85, ge=0.0, le=1.0)
+
+    INTERNAL_API_TOKEN: str
+    SEARCH_TOP_K: int = Field(default=8, gt=0, le=50)
 
 
 env = Env()  # type: ignore[call-arg]

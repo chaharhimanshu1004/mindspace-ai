@@ -26,3 +26,25 @@ class MemoryService:
             .values(status=status.value, updated_at=utc_now_naive())
         )
         await session.execute(stmt)
+
+    @staticmethod
+    async def set_enrichment(
+        session: AsyncSession,
+        memory_id: UUID,
+        title: str,
+        summary: str,
+        topics: list[str],
+        status: MemoryStatus,
+    ) -> None:
+        stmt = (
+            update(Memory)
+            .where(Memory.id == memory_id)
+            .values(
+                title=title,
+                summary=summary,
+                topics=topics,
+                status=status.value,
+                updated_at=utc_now_naive(),
+            )
+        )
+        await session.execute(stmt)

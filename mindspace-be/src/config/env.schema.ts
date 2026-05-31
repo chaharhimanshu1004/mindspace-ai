@@ -20,6 +20,14 @@ export const envSchema = z.object({
     COOKIE_DOMAIN: z.string().optional(),
 
     REDIS_URL: z.string().min(1).default("redis://localhost:6379"),
+
+    AI_ENGINE_URL: z.string().url().default("http://localhost:5000"),
+    AI_ENGINE_TOKEN: z.string().min(1),
+
+    GEMINI_API_KEY: z.string().min(1),
+    GEMINI_CHAT_MODEL: z.string().default("gemini-2.5-flash"),
+
+    CHAT_TOP_K: z.coerce.number().int().min(1).max(50).default(8),
 });
 
 export type Env = z.infer<typeof envSchema>;

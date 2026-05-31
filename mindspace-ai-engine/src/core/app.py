@@ -6,6 +6,7 @@ from fastapi import FastAPI
 
 from src.db.postgres import dispose_postgres, ping_postgres
 from src.db.redis import dispose_redis, ping_redis
+from src.routes.internal_search import router as internal_search_router
 from src.utils.logger import get_logger, setup_logging
 from src.workers.enrichment_worker import EnrichmentWorker
 
@@ -48,5 +49,7 @@ def create_app() -> FastAPI:
             "status": "ok",
             "worker": worker.consumer_name if worker else "not-started",
         }
+
+    app.include_router(internal_search_router)
 
     return app

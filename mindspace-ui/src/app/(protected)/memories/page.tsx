@@ -1,16 +1,13 @@
 "use client";
 
-import { useAuth } from "@/features/auth/use-auth";
 import { useMemories } from "@/features/memories/hooks/use-memories";
-import { Wordmark } from "@/components/brand/wordmark";
-import { Button } from "@/components/ui/button";
+import { AppHeader } from "@/components/layouts/app-header";
 import { MemoryGrid } from "@/features/memories/components/memory-grid";
 import { MemoryEmpty } from "@/features/memories/components/memory-empty";
 import { MemorySkeletonGrid } from "@/features/memories/components/memory-skeleton-grid";
 import { MemoryComposer } from "@/features/memories/components/memory-composer";
 
 export default function MemoriesPage() {
-    const { user, signOut } = useAuth();
     const { data, isLoading, isError } = useMemories();
 
     const memories = data?.items ?? [];
@@ -18,15 +15,7 @@ export default function MemoriesPage() {
     return (
         <main className="min-h-screen calm-gradient">
             <div className="grain min-h-screen pb-40">
-                <header className="px-6 sm:px-10 pt-8 flex items-center justify-between">
-                    <Wordmark href="/memories" />
-                    <div className="flex items-center gap-3 text-sm text-ink-muted">
-                        <span className="hidden sm:inline">{user?.email}</span>
-                        <Button variant="ghost" size="md" onClick={() => signOut()}>
-                            Sign out
-                        </Button>
-                    </div>
-                </header>
+                <AppHeader />
 
                 <section className="px-6 sm:px-10 pt-10 sm:pt-14 max-w-6xl mx-auto">
                     <div className="flex items-end justify-between gap-4 mb-6 sm:mb-8">
