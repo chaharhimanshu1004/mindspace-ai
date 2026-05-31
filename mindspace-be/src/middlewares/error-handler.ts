@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
 import { AppError } from "../errors/app-error";
 import { env } from "../config/env";
+import { clearAuthCookie } from "../utils/auth.cookie";
 
 export const errorHandler = (
     err: unknown,
@@ -21,6 +22,9 @@ export const errorHandler = (
     }
 
     if (err instanceof AppError) {
+        if (err.status === 401) {
+            clearAuthCookie(res);
+        }
         res.status(err.status).json({
             error: { code: err.code, message: err.message, details: err.details },
         });

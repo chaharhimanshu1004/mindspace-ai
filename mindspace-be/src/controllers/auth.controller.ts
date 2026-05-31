@@ -53,12 +53,9 @@ export class AuthController {
         try {
             const auth = req.auth;
 
-            if (!auth) {
-                ResponseHandler.error(res, "Authentication required", null, 401);
-                return;
+            if (auth) {
+                await AuthService.logout(auth.tokenId).catch(() => {});
             }
-
-            await AuthService.logout(auth.tokenId);
 
             clearAuthCookie(res);
             ResponseHandler.success(res, null, "Logged out successfully", 200);

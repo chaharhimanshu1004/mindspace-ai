@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 const COOKIE_NAME = "mindspace.token";
 
 const AUTH_PAGES = ["/login", "/signup"];
-const PROTECTED_PAGES = ["/memories"];
+const PROTECTED_PAGES = ["/memories", "/ask"];
 
 const startsWithAny = (pathname: string, list: string[]): boolean =>
     list.some((p) => pathname === p || pathname.startsWith(`${p}/`));
@@ -25,5 +25,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/login", "/signup", "/memories/:path*"],
+    matcher: ["/login", "/signup", "/memories/:path*", "/ask/:path*"],
 };

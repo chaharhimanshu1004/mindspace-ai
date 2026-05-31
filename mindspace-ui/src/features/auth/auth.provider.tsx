@@ -24,6 +24,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // ignore
         }
         setUser(null);
+        if (typeof window !== "undefined") {
+            window.location.href = "/";
+        }
     }, []);
 
     const value = useMemo<AuthContextValue>(

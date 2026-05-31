@@ -29,6 +29,17 @@ export const apiClient = async <T>(args: RequestArgs): Promise<T> => {
                 | { message?: string; code?: number; error?: unknown }
                 | undefined;
 
+            if (status === 401) {
+                if (
+                    typeof window !== "undefined" &&
+                    window.location.pathname !== "/" &&
+                    window.location.pathname !== "/login" &&
+                    window.location.pathname !== "/signup"
+                ) {
+                    window.location.href = "/";
+                }
+            }
+
             throw new ApiError({
                 status,
                 code: String(body?.code ?? "UNKNOWN"),
