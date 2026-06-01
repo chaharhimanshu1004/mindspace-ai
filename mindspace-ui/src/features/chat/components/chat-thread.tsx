@@ -81,6 +81,7 @@ export function ChatThread() {
                                 key={m.id}
                                 role={m.role}
                                 content={m.content}
+                                allSourcesDeleted={m.allSourcesDeleted}
                                 sources={
                                     m.role === "assistant"
                                         ? (sourcesByMessage[m.id] || m.sources)

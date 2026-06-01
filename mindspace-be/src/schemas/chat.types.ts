@@ -1,7 +1,7 @@
 export interface ChatSource {
     memoryId: string;
     title: string | null;
-    content: string;
+    content: string | null;
     cited: boolean;
     createdAt: string;
 }
@@ -16,9 +16,11 @@ export interface ChatAnswer {
 export interface ChatHistoryItem {
     id: string;
     role: "user" | "assistant";
-    content: string;
+    content: string | null;
     sources: ChatSource[];
     createdAt: string;
+    allSourcesDeleted?: boolean;
+    hasActiveSources?: boolean;
 }
 
 export interface ChatHistoryPage {

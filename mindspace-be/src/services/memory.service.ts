@@ -67,4 +67,15 @@ export class MemoryService {
 
         return toPublicMemory(memory);
     }
+
+    public static async delete(args: GetArgs): Promise<void> {
+        const memory = await MemoryModel.findByIdForUser({
+            id: args.id,
+            userId: args.userId,
+        });
+
+        if (!memory) throw memoryNotFoundError();
+
+        await MemoryModel.delete(args);
+    }
 }

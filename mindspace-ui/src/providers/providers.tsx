@@ -22,7 +22,19 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 position="top-center"
                 toastOptions={{
                     duration: 4000,
-                    style: { fontSize: "0.875rem" },
+                    className: "!border !border-border-subtle/60 !bg-white/90 !backdrop-blur-md !text-ink !text-xs !rounded-2xl !shadow-lift !px-4 !py-3 !font-medium !transition-all !duration-300",
+                    success: {
+                        iconTheme: {
+                            primary: "#A3B18A",
+                            secondary: "#FAFAF7",
+                        },
+                    },
+                    error: {
+                        iconTheme: {
+                            primary: "#EF4444",
+                            secondary: "#FAFAF7",
+                        },
+                    },
                 }}
             />
         </QueryClientProvider>

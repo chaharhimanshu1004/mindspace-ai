@@ -74,4 +74,20 @@ export class MemoryController {
             handleError(res, error, "Failed to fetch memory");
         }
     }
+
+    public static async delete(req: Request, res: Response): Promise<void> {
+        try {
+            const ctx = requireAuthCtx(req, res);
+            if (!ctx) return;
+
+            await MemoryService.delete({
+                userId: ctx.userId,
+                id: req.params.id,
+            });
+
+            ResponseHandler.success(res, null, "Memory deleted successfully", 200);
+        } catch (error) {
+            handleError(res, error, "Failed to delete memory");
+        }
+    }
 }

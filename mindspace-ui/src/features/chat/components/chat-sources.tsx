@@ -9,8 +9,9 @@ interface Props {
 
 export function ChatSources({ sources }: Props) {
     const cited = sources.filter((s) => s.cited);
+    const deletedCount = cited.filter((s) => s.deleted).length;
 
-    if (cited.length === 0) return null;
+    if (cited.length === 0 || cited.length === deletedCount) return null;
 
     return (
         <div className="mt-4 pt-4 border-t border-border-softer">

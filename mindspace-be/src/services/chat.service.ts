@@ -137,22 +137,40 @@ export class ChatService {
                 const sources = m.retrievedIds
                     .map((id) => {
                         const memory = memoryMap.get(id);
-                        if (!memory) return null;
+                        if (!memory) {
+                            return {
+                                memoryId: id,
+                                title: "Deleted Memory",
+                                content: null,
+                                cited: true,
+                                createdAt: m.createdAt.toISOString(),
+                                deleted: true,
+                            };
+                        }
                         return {
                             memoryId: id,
                             title: memory.title,
                             content: memory.content,
                             cited: true,
                             createdAt: memory.createdAt.toISOString(),
+                            deleted: false,
                         };
-                    })
-                    .filter((s): s is NonNullable<typeof s> => s !== null);
+                    });
+
+                const totalSourcesCount = sources.length;
+                const deletedSourcesCount = sources.filter((s) => s.deleted).length;
+                const activeSourcesCount = totalSourcesCount - deletedSourcesCount;
+
+                const allSourcesDeleted = totalSourcesCount > 0 && activeSourcesCount === 0;
+                const hasActiveSources = activeSourcesCount > 0;
 
                 return {
                     id: m.id,
                     role: m.role as "user" | "assistant",
-                    content: m.content,
+                    content: (m.role === "assistant" && allSourcesDeleted) ? null : m.content,
                     sources,
+                    allSourcesDeleted,
+                    hasActiveSources,
                     createdAt: m.createdAt.toISOString(),
                 };
             }),

@@ -9,6 +9,7 @@ router.use(requireAuth);
 router
     .post("/", MemoryController.create)
     .get("/", MemoryController.list)
-    .get("/:id", MemoryController.get);
+    .get("/:id", MemoryController.get)
+    .delete("/:id", MemoryController.delete);
 
 export default router;

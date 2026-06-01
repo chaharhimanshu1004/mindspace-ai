@@ -28,6 +28,12 @@ export class MemoryModel {
         });
     }
 
+    public static async delete(args: { id: string; userId: number }) {
+        return prisma.memory.delete({
+            where: { id: args.id, userId: args.userId },
+        });
+    }
+
     public static async listForUser(args: ListArgs) {
         const items = await prisma.memory.findMany({
             where: { userId: args.userId },

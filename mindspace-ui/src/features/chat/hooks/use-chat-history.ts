@@ -7,6 +7,6 @@ import { chatKeys } from "../chat.keys";
 export const useChatHistory = () =>
     useQuery({
         queryKey: chatKeys.history(),
-        queryFn: () => historyApi({ limit: 50 }),
+        queryFn: () => historyApi({ limit: 10 }),
         staleTime: 30_000,
     });
