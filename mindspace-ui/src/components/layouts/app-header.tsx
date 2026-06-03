@@ -14,7 +14,7 @@ export function AppHeader() {
     const pathname = usePathname();
 
     return (
-        <header className="px-6 sm:px-10 pt-6 sm:pt-8 flex items-center justify-between gap-4">
+        <header className="pl-14 sm:pl-20 pr-10 sm:pr-14 pt-6 sm:pt-8 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 sm:gap-6 min-w-0">
                 <Wordmark href="/memories" />
                 <nav className="flex items-center gap-1 text-sm">
