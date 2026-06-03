@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/brand/wordmark";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/features/auth/use-auth";
+import { ProfileButton } from "@/features/profile/components/profile-button";
 
 const navItems = [
     { href: "/memories", label: "Memories" },
@@ -12,12 +11,11 @@ const navItems = [
 ];
 
 export function AppHeader() {
-    const { user, signOut } = useAuth();
     const pathname = usePathname();
 
     return (
-        <header className="px-6 sm:px-10 pt-8 flex items-center justify-between">
-            <div className="flex items-center gap-6">
+        <header className="px-6 sm:px-10 pt-6 sm:pt-8 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 sm:gap-6 min-w-0">
                 <Wordmark href="/memories" />
                 <nav className="flex items-center gap-1 text-sm">
                     {navItems.map((item) => {
@@ -29,7 +27,7 @@ export function AppHeader() {
                                 className={[
                                     "px-3 py-1.5 rounded-xl transition-colors",
                                     active
-                                        ? "text-ink bg-indigo-tint"
+                                        ? "text-indigo-soft bg-indigo-tint font-medium"
                                         : "text-ink-muted hover:text-ink",
                                 ].join(" ")}
                             >
@@ -39,11 +37,8 @@ export function AppHeader() {
                     })}
                 </nav>
             </div>
-            <div className="flex items-center gap-3 text-sm text-ink-muted">
-                <span className="hidden sm:inline">{user?.email}</span>
-                <Button variant="ghost" size="md" onClick={() => signOut()}>
-                    Sign out
-                </Button>
+            <div className="flex items-center gap-3">
+                <ProfileButton />
             </div>
         </header>
     );
