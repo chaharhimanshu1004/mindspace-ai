@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { GoogleCalendarCard } from "./google-calendar-card";
+import { useIntegrations } from "../hooks/use-integrations";
 
 export function IntegrationsSection() {
-    const [calendarConnected, setCalendarConnected] = useState(false);
+    const { calendarConnected, loading, disconnecting, connectCalendar, disconnectCalendar } = useIntegrations();
 
     return (
         <div>
@@ -18,8 +18,10 @@ export function IntegrationsSection() {
             <div className="mt-6 flex flex-col gap-3">
                 <GoogleCalendarCard
                     connected={calendarConnected}
-                    onConnect={() => setCalendarConnected(true)}
-                    onDisconnect={() => setCalendarConnected(false)}
+                    loading={loading}
+                    disconnecting={disconnecting}
+                    onConnect={connectCalendar}
+                    onDisconnect={disconnectCalendar}
                 />
             </div>
         </div>

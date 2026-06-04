@@ -28,6 +28,10 @@ export const envSchema = z.object({
     GEMINI_CHAT_MODEL: z.string().default("gemini-2.5-flash"),
 
     CHAT_TOP_K: z.coerce.number().int().min(1).max(50).default(8),
+
+    GOOGLE_CLIENT_ID: z.string().min(1),
+    GOOGLE_CLIENT_SECRET: z.string().min(1),
+    GOOGLE_REDIRECT_URI: z.string().url(),
 });
 
 export type Env = z.infer<typeof envSchema>;

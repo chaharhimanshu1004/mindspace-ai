@@ -10,8 +10,16 @@ export class AuthModel {
     }
 
     public static async createUser(args: { email: string; passwordHash: string }) {
+        const name = args.email.split("@")[0]; // users by default name is their prefix of email
         return prisma.user.create({
-            data: { email: args.email, password: args.passwordHash },
+            data: { email: args.email, password: args.passwordHash, name },
+        });
+    }
+
+    public static async updateName(args: { userId: number; name: string }) {
+        return prisma.user.update({
+            where: { id: args.userId },
+            data: { name: args.name },
         });
     }
 

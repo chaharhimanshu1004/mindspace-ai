@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
 import { useMemories } from "@/features/memories/hooks/use-memories";
 import { AppHeader } from "@/components/layouts/app-header";
 import { MemoryGrid } from "@/features/memories/components/memory-grid";
@@ -9,6 +12,14 @@ import { MemoryComposer } from "@/features/memories/components/memory-composer";
 
 export default function MemoriesPage() {
     const { data, isLoading, isError } = useMemories();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        if (searchParams.get("integration") === "google_calendar" && searchParams.get("status") === "connected") {
+            toast.success("Google Calendar connected");
+            window.history.replaceState({}, "", "/memories");
+        }
+    }, [searchParams]);
 
     const memories = data?.items ?? [];
 

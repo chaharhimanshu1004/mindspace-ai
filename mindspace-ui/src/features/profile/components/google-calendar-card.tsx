@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/button";
 
 interface Props {
     connected: boolean;
+    loading: boolean;
+    disconnecting: boolean;
     onConnect: () => void;
     onDisconnect: () => void;
 }
 
-export function GoogleCalendarCard({ connected, onConnect, onDisconnect }: Props) {
+export function GoogleCalendarCard({ connected, loading, disconnecting, onConnect, onDisconnect }: Props) {
     return (
         <article
             className={[
@@ -44,33 +46,30 @@ export function GoogleCalendarCard({ connected, onConnect, onDisconnect }: Props
 
             <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                    <h4 className="text-ink text-[14px] font-medium">
-                        Google Calendar
-                    </h4>
-                    {connected ? (
+                    <h4 className="text-ink text-[14px] font-medium">Google Calendar</h4>
+                    {loading ? (
+                        <span className="text-[11px] text-ink-subtle">Checking…</span>
+                    ) : connected ? (
                         <span className="inline-flex items-center gap-1 text-[11px] text-sage bg-sage/10 border border-sage/25 rounded-full px-2 py-0.5">
                             <span className="w-1.5 h-1.5 rounded-full bg-sage" />
                             Connected
                         </span>
                     ) : (
-                        <span className="text-[11px] text-ink-subtle">
-                            Not connected
-                        </span>
+                        <span className="text-[11px] text-ink-subtle">Not connected</span>
                     )}
                 </div>
                 <p className="mt-1 text-[13px] text-ink-muted leading-relaxed">
-                    Let MindSpace add deadlines and reminders from your memories
-                    straight into your calendar.
+                    Let MindSpace add deadlines and reminders from your memories straight into your calendar.
                 </p>
             </div>
 
             <div className="shrink-0">
                 {connected ? (
-                    <Button variant="secondary" size="md" onClick={onDisconnect}>
-                        Disconnect
+                    <Button variant="secondary" size="md" onClick={onDisconnect} disabled={disconnecting}>
+                        {disconnecting ? "Disconnecting…" : "Disconnect"}
                     </Button>
                 ) : (
-                    <Button variant="primary" size="md" onClick={onConnect}>
+                    <Button variant="primary" size="md" onClick={onConnect} disabled={loading}>
                         Connect
                     </Button>
                 )}

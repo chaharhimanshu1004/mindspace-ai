@@ -4,9 +4,11 @@ import { useState } from "react";
 import { ProfileModal } from "./profile-modal";
 import { useAuth } from "@/features/auth/use-auth";
 
-const initialOf = (email: string | undefined): string => {
-    if (!email) return "·";
-    return email.trim().charAt(0).toUpperCase() || "·";
+const initialsOf = (name: string | undefined): string => {
+    if (!name) return "·";
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
 };
 
 export function ProfileButton() {
@@ -19,7 +21,7 @@ export function ProfileButton() {
                 type="button"
                 onClick={() => setOpen(true)}
                 aria-label="Open profile settings"
-                title={user?.email ?? "Profile"}
+                title={user?.name ?? user?.email ?? "Profile"}
                 className={[
                     "w-9 h-9 rounded-full",
                     "bg-indigo-tint border border-indigo-soft/20",
@@ -30,7 +32,7 @@ export function ProfileButton() {
                     "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-soft/40 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
                 ].join(" ")}
             >
-                {initialOf(user?.email)}
+                {initialsOf(user?.name)}
             </button>
 
             <ProfileModal open={open} onClose={() => setOpen(false)} />
