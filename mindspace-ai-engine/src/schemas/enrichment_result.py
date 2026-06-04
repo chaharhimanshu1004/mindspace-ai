@@ -30,11 +30,27 @@ class EnrichedEntity(BaseModel):
         return max(0.0, min(1.0, v))
 
 
+class CalendarEvent(BaseModel):
+    has_deadline: bool = Field(alias="hasDeadline", default=False)
+    event_title: str | None = Field(alias="eventTitle", default=None)
+    event_datetime: str | None = Field(alias="eventDatetime", default=None)
+    event_description: str | None = Field(alias="eventDescription", default=None)
+
+    @field_validator("event_title", "event_description")
+    @classmethod
+    def _strip_optional(cls, v: str | None) -> str | None:
+        if v is None:
+            return None
+        cleaned = v.strip()
+        return cleaned if cleaned else None
+
+
 class EnrichmentResult(BaseModel):
     title: str
     summary: str
     topics: list[str] = Field(default_factory=list)
     entities: list[EnrichedEntity] = Field(default_factory=list)
+    calendar_event: CalendarEvent = Field(alias="calendarEvent", default_factory=CalendarEvent)
 
     @field_validator("title", "summary")
     @classmethod

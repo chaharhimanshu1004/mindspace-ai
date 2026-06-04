@@ -15,17 +15,27 @@ Read the memory and produce:
 - entities: 0-8 concrete entities mentioned or strongly implied. Each entity has a name,
   an entity_type from {concept, person, project, place, tool}, and a salience from 0.0 to 1.0
   indicating how central the entity is to this memory.
+- calendarEvent: Detect if the memory contains a concrete deadline, appointment, or reminder with a
+  specific or resolvable date/time. Set hasDeadline=true only when a real date or time is present
+  or can be resolved from the current datetime provided. For vague intentions ("someday", "eventually")
+  set hasDeadline=false. When hasDeadline=true provide:
+    - eventTitle: short title for the calendar event (5-8 words)
+    - eventDatetime: ISO 8601 datetime string resolved using the current datetime (e.g. "2026-06-10T15:00:00")
+    - eventDescription: one sentence describing the event
 
 Rules:
-- If the memory is empty or trivial, return minimal but valid output (e.g. title="Quick note", empty entities).
-- entities[].name must be the canonical noun form (e.g. "FastAPI" not "fastapi", "Claude" not "claude code").
+- If the memory is empty or trivial, return minimal but valid output.
+- entities[].name must be the canonical noun form (e.g. "FastAPI" not "fastapi").
 - Do not include the user themself as a person entity.
 - Do not echo the full memory in the summary; distill it.
+- For relative dates ("tomorrow", "next Friday", "in 3 days"), resolve them using the CURRENT DATETIME provided.
+- If no time is mentioned for a deadline, default to 09:00 local time.
 """
 
 
-def build_enrich_prompt(content: str) -> str:
+def build_enrich_prompt(content: str, now_iso: str) -> str:
     return (
+        f"CURRENT DATETIME: {now_iso}\n\n"
         f"{ENRICH_INSTRUCTIONS}\n\n"
         f"---\n"
         f"MEMORY:\n{content.strip()}\n"

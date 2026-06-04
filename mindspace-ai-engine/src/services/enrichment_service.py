@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from uuid import UUID
 
 from sqlalchemy.dialects.postgresql import insert
@@ -10,6 +11,7 @@ from src.models import MemoryEntity, MemoryStatus
 from src.prompts.enrich import ENRICH_SYSTEM, build_enrich_prompt
 from src.schemas.enrichment_gemini_schema import build_enrichment_gemini_schema
 from src.schemas.enrichment_result import EnrichmentResult
+from src.services.calendar_service import sync_calendar_event
 from src.services.entity_service import EntityService, EntityUpsertInput
 from src.services.memory_service import MemoryService
 from src.utils.logger import get_logger
@@ -34,10 +36,12 @@ class EnrichmentService:
         if not text:
             raise ValueError("Cannot enrich empty content")
 
+        now_iso = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%S UTC")
+
         provider = get_provider(provider_name)
         structured = await provider.complete_structured(
             StructuredRequest(
-                prompt=build_enrich_prompt(text),
+                prompt=build_enrich_prompt(text, now_iso),
                 schema=EnrichmentResult,
                 wire_schema=build_enrichment_gemini_schema(),
                 system=ENRICH_SYSTEM,
@@ -58,10 +62,11 @@ class EnrichmentService:
             entity_embeddings = embed_resp.vectors
 
         logger.info(
-            "Enriched memory: title='%s' topics=%d entities=%d via %s",
+            "Enriched memory: title='%s' topics=%d entities=%d has_deadline=%s via %s",
             result.title,
             len(result.topics),
             len(result.entities),
+            result.calendar_event.has_deadline,
             structured.model,
         )
         return EnrichmentBundle(
@@ -107,6 +112,8 @@ class EnrichmentService:
             status=MemoryStatus.ENRICHED,
         )
         await session.flush()
+
+        await sync_calendar_event(session, user_id, result.calendar_event)
 
         logger.info(
             "Persisted enrichment for memory %s (entities=%d, topics=%d)",

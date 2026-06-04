@@ -37,5 +37,8 @@ class Env(BaseSettings):
     INTERNAL_API_TOKEN: str
     SEARCH_TOP_K: int = Field(default=8, gt=0, le=50)
 
+    GOOGLE_CLIENT_ID: str
+    GOOGLE_CLIENT_SECRET: str
+
 
 env = Env()  # type: ignore[call-arg]

@@ -17,6 +17,17 @@ def build_enrichment_gemini_schema() -> dict[str, Any]:
         "required": ["name", "entityType", "salience"],
     }
 
+    calendar_event_schema: dict[str, Any] = {
+        "type": "OBJECT",
+        "properties": {
+            "hasDeadline": {"type": "BOOLEAN"},
+            "eventTitle": {"type": "STRING"},
+            "eventDatetime": {"type": "STRING"},
+            "eventDescription": {"type": "STRING"},
+        },
+        "required": ["hasDeadline"],
+    }
+
     return {
         "type": "OBJECT",
         "properties": {
@@ -30,6 +41,7 @@ def build_enrichment_gemini_schema() -> dict[str, Any]:
                 "type": "ARRAY",
                 "items": entity_schema,
             },
+            "calendarEvent": calendar_event_schema,
         },
-        "required": ["title", "summary", "topics", "entities"],
+        "required": ["title", "summary", "topics", "entities", "calendarEvent"],
     }
