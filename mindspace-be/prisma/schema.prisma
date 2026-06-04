@@ -14,6 +14,7 @@ model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
   password  String
+  name      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -21,6 +22,7 @@ model User {
   memories      Memory[]
   entities      Entity[]
   conversations Conversation[]
+  integrations  UserIntegration[]
 
   @@map("users")
 }
@@ -49,7 +51,7 @@ model Memory {
   summary String?
   topics  String[] @default([])
 
-  status String @default("pending")
+  status    String @default("pending")
 
   clusterId Int?
 
@@ -69,12 +71,13 @@ model Memory {
 }
 
 model MemoryChunk {
-  id         String   @id @default(uuid()) @db.Uuid
-  memoryId   String   @db.Uuid
+  id         String                  @id @default(uuid()) @db.Uuid
+  memoryId   String                  @db.Uuid
   userId     Int
-  chunkIndex Int      @default(0)
-  content    String   @db.Text
-  createdAt  DateTime @default(now())
+  chunkIndex Int                     @default(0)
+  content    String                  @db.Text
+  embedding  Unsupported("vector")?
+  createdAt  DateTime                @default(now())
 
   memory Memory @relation(fields: [memoryId], references: [id], onDelete: Cascade)
 
@@ -83,14 +86,15 @@ model MemoryChunk {
 }
 
 model Entity {
-  id           String   @id @default(uuid()) @db.Uuid
+  id           String                  @id @default(uuid()) @db.Uuid
   userId       Int
   name         String
   entityType   String
-  description  String?  @db.Text
-  mentionCount Int      @default(1)
-  firstSeen    DateTime @default(now())
-  lastSeen     DateTime @default(now())
+  description  String?                 @db.Text
+  mentionCount Int                     @default(1)
+  embedding    Unsupported("vector")?
+  firstSeen    DateTime                @default(now())
+  lastSeen     DateTime                @default(now())
 
   user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   memoryLinks MemoryEntity[]
@@ -131,6 +135,21 @@ model MemoryEdge {
   @@index([userId, srcId])
   @@index([userId, dstId])
   @@map("memory_edges")
+}
+
+model UserIntegration {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  provider    String
+  credentials Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider])
+  @@index([userId])
+  @@map("user_integrations")
 }
 
 model Conversation {
