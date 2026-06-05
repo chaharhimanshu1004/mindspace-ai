@@ -9,4 +9,5 @@ export interface GoogleCalendarCredentials {
     accessToken: string;
     refreshToken: string;
     expiresAt: string;
+    timezone: string;
 }

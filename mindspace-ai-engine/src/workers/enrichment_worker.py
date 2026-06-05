@@ -9,8 +9,10 @@ from src.db.postgres import SessionFactory
 from src.db.redis import redis
 from src.models import Memory, MemoryStatus
 from src.schemas.enrich_job import EnrichJobPayload
+from src.services.calendar_service import sync_calendar_event
 from src.services.embed_service import EmbedResult, EmbedService
 from src.services.enrichment_service import EnrichmentBundle, EnrichmentService
+from src.services.integration_repo import IntegrationRepo
 from src.services.memory_service import MemoryService
 from src.utils.logger import get_logger
 from src.utils.stream_keys import ConsumerGroups, StreamKeys
@@ -107,21 +109,21 @@ class EnrichmentWorker:
         if snapshot is None:
             return
 
-        memory_id, user_id, content = snapshot
+        memory_id, user_id, content, tz_name = snapshot
 
-        await self._run_stage_a(memory_id=memory_id, user_id=user_id, content=content) # vector embedding
-        await self._run_stage_b(memory_id=memory_id, user_id=user_id, content=content) # enrichment -> title, summary, topics
+        await self._run_stage_a(memory_id=memory_id, user_id=user_id, content=content)
+        await self._run_stage_b(memory_id=memory_id, user_id=user_id, content=content, tz_name=tz_name)
 
         logger.info("Processing memory %s — done", memory_id)
 
     async def _run_stage_b(
-        self, memory_id: UUID, user_id: int, content: str
+        self, memory_id: UUID, user_id: int, content: str, tz_name: str
     ) -> None:
         if await self._stage_already_done(memory_id, MemoryStatus.ENRICHED):
             logger.info("Memory %s — Stage B already done; skipping", memory_id)
             return
         logger.info("Memory %s — Stage B: enrich", memory_id)
-        bundle = await EnrichmentService.enrich(content=content)
+        bundle = await EnrichmentService.enrich(content=content, tz_name=tz_name)
         logger.info(
             "Memory %s — Stage B enrich done (model=%s, entities=%d)",
             memory_id,
@@ -129,10 +131,16 @@ class EnrichmentWorker:
             len(bundle.result.entities),
         )
 
-        await self._write_enrichment(
+        calendar_event = await self._write_enrichment(
             memory_id=memory_id, user_id=user_id, bundle=bundle
         )
         logger.info("Memory %s — Stage B persisted (status=enriched)", memory_id)
+
+        await sync_calendar_event(
+            user_id=user_id,
+            event=calendar_event,
+            tz_name=tz_name,
+        )
 
     _RESUMABLE_STATUSES = frozenset(
         {MemoryStatus.PENDING.value, MemoryStatus.EMBEDDED.value}
@@ -140,7 +148,7 @@ class EnrichmentWorker:
 
     async def _claim(
         self, payload: EnrichJobPayload
-    ) -> tuple[UUID, int, str] | None:
+    ) -> tuple[UUID, int, str, str] | None:
         async with SessionFactory() as session:
             memory = await MemoryService.get(session, payload.memoryId, payload.userId)
 
@@ -160,7 +168,17 @@ class EnrichmentWorker:
                 )
                 return None
 
-            return memory.id, memory.user_id, memory.content
+            from src.utils.credentials import decrypt_credentials
+            integration = await IntegrationRepo.get_google_calendar(session, memory.user_id)
+            tz_name: str = "Asia/Kolkata"
+            if integration:
+                try:
+                    creds = decrypt_credentials(integration.credentials)
+                    tz_name = creds.get("timezone", "Asia/Kolkata")
+                except Exception:
+                    pass
+
+            return memory.id, memory.user_id, memory.content, tz_name
 
     async def _run_stage_a(
         self, memory_id: UUID, user_id: int, content: str
@@ -220,9 +238,10 @@ class EnrichmentWorker:
         memory_id: UUID,
         user_id: int,
         bundle: EnrichmentBundle,
-    ) -> None:
+    ) -> "CalendarEvent":
+        from src.schemas.enrichment_result import CalendarEvent
         async with SessionFactory() as session, session.begin():
-            await EnrichmentService.persist(
+            return await EnrichmentService.persist(
                 session=session,
                 memory_id=memory_id,
                 user_id=user_id,

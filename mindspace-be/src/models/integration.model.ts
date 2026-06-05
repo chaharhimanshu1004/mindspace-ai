@@ -2,7 +2,7 @@ import { prisma } from "../db/prisma";
 import type { IntegrationProvider } from "../schemas/integration.types";
 
 export class IntegrationModel {
-    public static async upsert(args: { userId: number; provider: IntegrationProvider; credentials: object }) {
+    public static async upsert(args: { userId: number; provider: IntegrationProvider; credentials: string }) {
         return prisma.userIntegration.upsert({
             where: { userId_provider: { userId: args.userId, provider: args.provider } },
             create: { userId: args.userId, provider: args.provider, credentials: args.credentials },
@@ -26,7 +26,7 @@ export class IntegrationModel {
         });
     }
 
-    public static async updateCredentials(args: { userId: number; provider: IntegrationProvider; credentials: object }) {
+    public static async updateCredentials(args: { userId: number; provider: IntegrationProvider; credentials: string }) {
         return prisma.userIntegration.update({
             where: { userId_provider: { userId: args.userId, provider: args.provider } },
             data: { credentials: args.credentials },

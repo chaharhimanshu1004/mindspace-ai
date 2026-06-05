@@ -5,7 +5,8 @@ import { GOOGLE_OAUTH } from "../utils/constants";
 interface RawTokens { accessToken: string; refreshToken: string; expiresAt: Date }
 interface RefreshedToken { accessToken: string; expiresAt: Date }
 
-export const buildAuthUrl = (state: string): string => {
+export const buildAuthUrl = (userId: number, timezone: string): string => {
+    const state = `${userId}:${timezone}`;
     const params = new URLSearchParams({
         client_id: env.GOOGLE_CLIENT_ID,
         redirect_uri: env.GOOGLE_REDIRECT_URI,
@@ -16,6 +17,13 @@ export const buildAuthUrl = (state: string): string => {
         state,
     });
     return `${GOOGLE_OAUTH.AUTH_URL}?${params.toString()}`;
+};
+
+export const parseOAuthState = (state: string): { userId: number; timezone: string } => {
+    const idx = state.indexOf(":");
+    const userId = parseInt(state.slice(0, idx), 10);
+    const timezone = state.slice(idx + 1) || "Asia/Kolkata";
+    return { userId, timezone };
 };
 
 export const exchangeCode = async (code: string): Promise<RawTokens> => {

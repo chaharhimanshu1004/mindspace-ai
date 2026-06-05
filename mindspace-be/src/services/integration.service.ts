@@ -1,26 +1,30 @@
 import { IntegrationModel } from "../models/integration.model";
-import { buildAuthUrl, exchangeCode, refreshAccessToken, revokeToken } from "../connectors/google-oauth.connector";
+import { buildAuthUrl, exchangeCode, parseOAuthState, refreshAccessToken, revokeToken } from "../connectors/google-oauth.connector";
 import { integrationNotFoundError } from "../errors/integration-errors";
+import { encryptCredentials, decryptCredentials } from "../utils/credentials.cipher";
 import type { GoogleCalendarCredentials, IntegrationProvider, PublicIntegration } from "../schemas/integration.types";
 
 const PROVIDER: IntegrationProvider = "google_calendar";
 
 const toGoogleCreds = (raw: unknown): GoogleCalendarCredentials =>
-    raw as GoogleCalendarCredentials;
+    decryptCredentials<GoogleCalendarCredentials>(raw as string);
 
 export class IntegrationService {
-    public static getGoogleAuthUrl(userId: number): string {
-        return buildAuthUrl(String(userId));
+    public static getGoogleAuthUrl(args: { userId: number; timezone: string }): string {
+        return buildAuthUrl(args.userId, args.timezone);
     }
 
-    public static async handleGoogleCallback(args: { code: string; userId: number }): Promise<void> {
+    public static async handleGoogleCallback(args: { code: string; state: string }): Promise<void> {
+        const { userId, timezone } = parseOAuthState(args.state);
         const tokens = await exchangeCode(args.code);
-        const credentials: GoogleCalendarCredentials = {
+        const plain: GoogleCalendarCredentials = {
             accessToken: tokens.accessToken,
             refreshToken: tokens.refreshToken,
             expiresAt: tokens.expiresAt.toISOString(),
+            timezone,
         };
-        await IntegrationModel.upsert({ userId: args.userId, provider: PROVIDER, credentials });
+        const credentials = encryptCredentials(plain);
+        await IntegrationModel.upsert({ userId, provider: PROVIDER, credentials });
     }
 
     public static async disconnect(userId: number): Promise<void> {
@@ -57,7 +61,7 @@ export class IntegrationService {
             accessToken: refreshed.accessToken,
             expiresAt: refreshed.expiresAt.toISOString(),
         };
-        await IntegrationModel.updateCredentials({ userId, provider: PROVIDER, credentials: updated });
+        await IntegrationModel.updateCredentials({ userId, provider: PROVIDER, credentials: encryptCredentials(updated) });
         return refreshed.accessToken;
     }
 }

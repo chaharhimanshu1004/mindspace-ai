@@ -20,8 +20,8 @@ export function useIntegrations() {
     }, []);
 
     const connectCalendar = () => {
-        window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/integrations/google-calendar/connect`;
-
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/integrations/google-calendar/connect?tz=${encodeURIComponent(tz)}`;
     };
 
     const disconnectCalendar = async () => {

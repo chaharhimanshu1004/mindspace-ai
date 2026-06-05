@@ -17,7 +17,8 @@ export class IntegrationController {
     public static connectGoogle(req: Request, res: Response): void {
         try {
             const userId = req.auth!.userId;
-            const url = IntegrationService.getGoogleAuthUrl(userId);
+            const timezone = (req.query.tz as string | undefined) ?? "Asia/Kolkata";
+            const url = IntegrationService.getGoogleAuthUrl({ userId, timezone });
             res.redirect(url);
         } catch (error) {
             handleError(res, error, "Failed to initiate Google OAuth");
@@ -33,13 +34,7 @@ export class IntegrationController {
                 return;
             }
 
-            const userId = parseInt(state, 10);
-            if (isNaN(userId)) {
-                ResponseHandler.error(res, "Invalid state param", null, 400);
-                return;
-            }
-
-            await IntegrationService.handleGoogleCallback({ code, userId });
+            await IntegrationService.handleGoogleCallback({ code, state });
 
             res.redirect(`${env.CORS_ORIGIN}/memories?integration=google_calendar&status=connected`);
         } catch (error) {

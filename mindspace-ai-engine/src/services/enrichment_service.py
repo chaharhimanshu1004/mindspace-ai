@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from datetime import datetime, timezone
 from uuid import UUID
 
 from sqlalchemy.dialects.postgresql import insert
@@ -10,13 +9,15 @@ from src.llm import EmbedRequest, StructuredRequest, get_provider
 from src.models import MemoryEntity, MemoryStatus
 from src.prompts.enrich import ENRICH_SYSTEM, build_enrich_prompt
 from src.schemas.enrichment_gemini_schema import build_enrichment_gemini_schema
-from src.schemas.enrichment_result import EnrichmentResult
-from src.services.calendar_service import sync_calendar_event
+from src.schemas.enrichment_result import CalendarEvent, EnrichmentResult
 from src.services.entity_service import EntityService, EntityUpsertInput
 from src.services.memory_service import MemoryService
+from src.utils.datetimes import format_for_prompt, now_in_tz
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
+
+_DEFAULT_TZ = "Asia/Kolkata"
 
 
 @dataclass(slots=True)
@@ -30,13 +31,14 @@ class EnrichmentService:
     @staticmethod
     async def enrich(
         content: str,
+        tz_name: str = _DEFAULT_TZ,
         provider_name: str | None = None,
     ) -> EnrichmentBundle:
         text = content.strip()
         if not text:
             raise ValueError("Cannot enrich empty content")
 
-        now_iso = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%S UTC")
+        now_iso = format_for_prompt(now_in_tz(tz_name))
 
         provider = get_provider(provider_name)
         structured = await provider.complete_structured(
@@ -81,7 +83,7 @@ class EnrichmentService:
         memory_id: UUID,
         user_id: int,
         bundle: EnrichmentBundle,
-    ) -> int:
+    ) -> CalendarEvent:
         result = bundle.result
 
         entity_ids: list[tuple[UUID, float]] = []
@@ -113,15 +115,13 @@ class EnrichmentService:
         )
         await session.flush()
 
-        await sync_calendar_event(session, user_id, result.calendar_event)
-
         logger.info(
             "Persisted enrichment for memory %s (entities=%d, topics=%d)",
             memory_id,
             len(entity_ids),
             len(result.topics),
         )
-        return len(entity_ids)
+        return result.calendar_event
 
     @staticmethod
     async def _link_memory_entities(

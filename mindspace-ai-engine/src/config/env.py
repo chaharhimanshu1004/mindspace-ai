@@ -39,6 +39,7 @@ class Env(BaseSettings):
 
     GOOGLE_CLIENT_ID: str
     GOOGLE_CLIENT_SECRET: str
+    CREDENTIALS_SECRET: str
 
 
 env = Env()  # type: ignore[call-arg]
