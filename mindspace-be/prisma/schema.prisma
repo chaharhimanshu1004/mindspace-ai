@@ -23,6 +23,8 @@ model User {
   entities      Entity[]
   conversations Conversation[]
   integrations  UserIntegration[]
+  oauthCodes    OAuthAuthCode[]
+  oauthTokens   OAuthToken[]
 
   @@map("users")
 }
@@ -51,7 +53,10 @@ model Memory {
   summary String?
   topics  String[] @default([])
 
-  status    String @default("pending")
+  status     String  @default("pending")
+  sourceType String  @default("user_text")
+  sourceRef  String?
+  sourceMeta Json?
 
   clusterId Int?
 
@@ -150,6 +155,58 @@ model UserIntegration {
   @@unique([userId, provider])
   @@index([userId])
   @@map("user_integrations")
+}
+
+model OAuthClient {
+  id           Int      @id @default(autoincrement())
+  name         String
+  clientId     String   @unique
+  clientSecret String?
+  redirectUris String[]
+  scopes       String[]
+  createdAt    DateTime @default(now())
+
+  authCodes OAuthAuthCode[]
+  tokens    OAuthToken[]
+
+  @@map("oauth_clients")
+}
+
+model OAuthAuthCode {
+  code          String    @id
+  clientId      String
+  userId        Int
+  redirectUri   String
+  scopes        String[]
+  codeChallenge String
+  expiresAt     DateTime
+  consumedAt    DateTime?
+
+  client OAuthClient @relation(fields: [clientId], references: [clientId], onDelete: Cascade)
+  user   User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@index([userId])
+  @@map("oauth_auth_codes")
+}
+
+model OAuthToken {
+  id           Int       @id @default(autoincrement())
+  userId       Int
+  clientId     String
+  accessToken  String    @unique
+  refreshToken String    @unique
+  scopes       String[]
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  lastUsedAt   DateTime?
+
+  client OAuthClient @relation(fields: [clientId], references: [clientId], onDelete: Cascade)
+  user   User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, clientId])
+  @@map("oauth_tokens")
 }
 
 model Conversation {
