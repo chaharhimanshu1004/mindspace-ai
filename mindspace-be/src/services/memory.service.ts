@@ -49,6 +49,7 @@ export class MemoryService {
             userId: args.userId,
             limit: args.input.limit,
             cursor: args.input.cursor,
+            sourceType: args.input.sourceType,
         });
 
         return {

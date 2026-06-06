@@ -157,6 +157,14 @@ model UserIntegration {
   @@map("user_integrations")
 }
 
+model MemorySource {
+  key       String @id
+  label     String
+  sortOrder Int    @default(0)
+
+  @@map("memory_sources")
+}
+
 model OAuthClient {
   id           Int      @id @default(autoincrement())
   name         String

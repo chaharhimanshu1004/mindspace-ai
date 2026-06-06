@@ -51,9 +51,6 @@ export class McpMemoryService {
     }
 
     public static async save(args: SaveArgs): Promise<{ memoryId: string | null; status: string; reason?: string }> {
-        console.log("[MCP save_memory] incoming content:\n", args.content);
-        console.log("[MCP save_memory] chars:", args.content.trim().length, "| kind:", args.kind, "| sessionId:", args.sessionId);
-
         if (args.content.trim().length < NOISE_GATE_CHARS) {
             return { memoryId: null, status: "filtered", reason: "too_short" };
         }

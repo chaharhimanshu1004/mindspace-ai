@@ -17,6 +17,7 @@ interface ListArgs {
     userId: number;
     limit: number;
     cursor?: string;
+    sourceType?: string;
 }
 
 export class MemoryModel {
@@ -68,7 +69,10 @@ export class MemoryModel {
 
     public static async listForUser(args: ListArgs) {
         const items = await prisma.memory.findMany({
-            where: { userId: args.userId },
+            where: {
+                userId: args.userId,
+                ...(args.sourceType ? { sourceType: args.sourceType } : {}),
+            },
             orderBy: { createdAt: "desc" },
             take: args.limit + 1,
             ...(args.cursor ? { cursor: { id: args.cursor }, skip: 1 } : {}),

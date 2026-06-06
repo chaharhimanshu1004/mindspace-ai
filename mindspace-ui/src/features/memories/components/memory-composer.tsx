@@ -7,7 +7,17 @@ import { createMemorySchema } from "../memory.schemas";
 
 const MAX_HEIGHT_PX = 180;
 
-export function MemoryComposer() {
+const SOURCE_HINTS: Record<string, string> = {
+    claude_code: "Memories from Claude are synced automatically — you can't add them directly",
+    slack: "Memories from Slack are synced automatically — you can't add them directly",
+};
+
+interface Props {
+    disabled?: boolean;
+    disabledSource?: string;
+}
+
+export function MemoryComposer({ disabled = false, disabledSource }: Props) {
     const [value, setValue] = useState("");
     const taRef = useRef<HTMLTextAreaElement | null>(null);
     const mutation = useCreateMemory();
@@ -24,6 +34,7 @@ export function MemoryComposer() {
     }, [value, autosize]);
 
     const send = useCallback(() => {
+        if (disabled) return;
         const parsed = createMemorySchema.safeParse({ content: value });
         if (!parsed.success) return;
 
@@ -36,7 +47,7 @@ export function MemoryComposer() {
                 },
             },
         );
-    }, [value, mutation]);
+    }, [value, mutation, disabled]);
 
     const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
@@ -45,7 +56,7 @@ export function MemoryComposer() {
         }
     };
 
-    const canSend = value.trim().length > 0 && !mutation.isPending;
+    const canSend = !disabled && value.trim().length > 0 && !mutation.isPending;
 
     return (
         <div className="fixed inset-x-0 bottom-0 z-30 pointer-events-none">
@@ -55,21 +66,24 @@ export function MemoryComposer() {
                         "flex items-end gap-2 p-2",
                         "bg-white/85 backdrop-blur-xl",
                         "border border-border-subtle rounded-3xl shadow-lift",
+                        disabled ? "opacity-60" : "",
                     ].join(" ")}
                 >
                     <textarea
                         ref={taRef}
                         value={value}
-                        onChange={(e) => setValue(e.target.value)}
+                        onChange={(e) => !disabled && setValue(e.target.value)}
                         onKeyDown={onKeyDown}
+                        disabled={disabled}
                         rows={1}
-                        placeholder="Add a thought…"
+                        placeholder={disabled && disabledSource && SOURCE_HINTS[disabledSource] ? SOURCE_HINTS[disabledSource] : "Add a thought…"}
                         className={[
                             "flex-1 resize-none bg-transparent",
                             "px-3 py-2.5 text-[15px] leading-relaxed",
                             "text-ink placeholder-ink-subtle",
                             "focus:outline-none",
                             "max-h-[180px]",
+                            disabled ? "cursor-not-allowed" : "",
                         ].join(" ")}
                     />
                     <button
@@ -95,7 +109,11 @@ export function MemoryComposer() {
                     </button>
                 </div>
                 <p className="mt-2 text-center text-[11px] text-ink-subtle">
-                    enter to save · shift + enter for a new line
+                    {disabled && disabledSource && SOURCE_HINTS[disabledSource]
+                        ? SOURCE_HINTS[disabledSource]
+                        : disabled
+                            ? "Notes can only be added from My Notes"
+                            : "enter to save · shift + enter for a new line"}
                 </p>
             </div>
         </div>
