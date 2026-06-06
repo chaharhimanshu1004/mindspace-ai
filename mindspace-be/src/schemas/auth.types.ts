@@ -21,4 +21,5 @@ export interface JwtPayload {
 export interface AuthContext {
     userId: number;
     tokenId: number;
+    scopes?: string[];
 }

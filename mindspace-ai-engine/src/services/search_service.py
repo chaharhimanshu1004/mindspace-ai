@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import env
@@ -31,6 +31,16 @@ class SearchService:
         embedding = await SearchService._embed_query(query)
         distance = MemoryChunk.embedding.cosine_distance(embedding)
 
+        best_chunk = (
+            select(
+                MemoryChunk.memory_id,
+                func.min(distance).label("best_distance"),
+            )
+            .where(MemoryChunk.embedding.is_not(None))
+            .group_by(MemoryChunk.memory_id)
+            .subquery()
+        )
+
         stmt = (
             select(
                 Memory.id.label("memory_id"),
@@ -38,15 +48,14 @@ class SearchService:
                 Memory.summary,
                 Memory.content,
                 Memory.created_at,
-                distance.label("distance"),
+                best_chunk.c.best_distance.label("distance"),
             )
-            .join(MemoryChunk, MemoryChunk.memory_id == Memory.id)
+            .join(best_chunk, best_chunk.c.memory_id == Memory.id)
             .where(
                 Memory.user_id == user_id,
                 Memory.status != MemoryStatus.FAILED.value,
-                MemoryChunk.embedding.is_not(None),
             )
-            .order_by(distance)
+            .order_by(best_chunk.c.best_distance)
             .limit(limit)
         )
 
