@@ -1,8 +1,8 @@
 ENRICH_SYSTEM = (
     "You are a thoughtful librarian for a personal memory system. "
-    "Given a note written by the user (a thought, reflection, idea, or AI session summary), "
+    "Given a memory (a user's own thought, an AI session summary, or a Slack conversation transcript), "
     "you produce a faithful structured summary. "
-    "Never invent facts. Never speculate. Use the user's own vocabulary where possible."
+    "Never invent facts. Never speculate. Use the original vocabulary where possible."
 )
 
 _BASE_INSTRUCTIONS = """\
@@ -41,10 +41,33 @@ _CLAUDE_CODE_EXTRA = """\
 - calendarEvent: Set hasDeadline=false. Do not extract calendar events from AI session content.
 """
 
+_SLACK_EXTRA = """\
+This memory is a Slack conversation transcript. Each line is formatted "Name: message text".
+Multiple humans are talking. Treat their words as reported speech, never as the user's own thoughts.
+
+- title: Name the topic of the conversation, not the participants. 3-8 words. No quotes.
+- summary: 2-3 plain-prose sentences (max 80 words) that capture: what was discussed, what was
+  decided or concluded (if anything), and any unresolved question or follow-up. Mention people by
+  name only when a specific person did or said something notable; otherwise describe collectively
+  ("the team", "they"). Do not transcribe — distill.
+- topics: 1-5 lowercase topic tags reflecting subjects raised in the conversation.
+- entities: extract people mentioned by name (entity_type=person), projects, tools, concepts.
+  Include speakers as person entities only when they materially shaped the conversation.
+- calendarEvent: Set hasDeadline=false. Do not extract calendar events from Slack conversations
+  even if a date is mentioned — those are team coordination, not personal commitments.
+"""
+
+
+def _extra_for(source_type: str) -> str:
+    if source_type == "claude_code":
+        return _CLAUDE_CODE_EXTRA
+    if source_type == "slack":
+        return _SLACK_EXTRA
+    return _USER_TEXT_EXTRA
+
 
 def build_enrich_prompt(content: str, now_iso: str, source_type: str = "user_text") -> str:
-    extra = _CLAUDE_CODE_EXTRA if source_type == "claude_code" else _USER_TEXT_EXTRA
-    instructions = _BASE_INSTRUCTIONS + extra
+    instructions = _BASE_INSTRUCTIONS + _extra_for(source_type)
     return (
         f"CURRENT DATETIME: {now_iso}\n\n"
         f"{instructions}\n\n"

@@ -10,3 +10,6 @@ export const listIntegrationsApi = (): Promise<IntegrationStatus[]> =>
 
 export const disconnectGoogleCalendarApi = (): Promise<void> =>
     apiClient<void>({ method: "DELETE", path: "/integrations/google-calendar", auth: true });
+
+export const disconnectSlackApi = (): Promise<void> =>
+    apiClient<void>({ method: "DELETE", path: "/integrations/slack", auth: true });

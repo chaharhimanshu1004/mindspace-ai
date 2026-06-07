@@ -165,6 +165,33 @@ model MemorySource {
   @@map("memory_sources")
 }
 
+model SlackChannelSubscription {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  channelId   String
+  channelName String
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  cursor SlackMessageCursor?
+
+  @@unique([userId, channelId])
+  @@index([userId, active])
+  @@map("slack_channel_subscriptions")
+}
+
+model SlackMessageCursor {
+  id             Int      @id @default(autoincrement())
+  subscriptionId Int      @unique
+  lastMessageTs  String?
+  updatedAt      DateTime @updatedAt
+
+  subscription SlackChannelSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@map("slack_message_cursors")
+}
+
 model OAuthClient {
   id           Int      @id @default(autoincrement())
   name         String

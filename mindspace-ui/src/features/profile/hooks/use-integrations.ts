@@ -1,19 +1,29 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { listIntegrationsApi, disconnectGoogleCalendarApi } from "../api/integrations.api";
 import toast from "react-hot-toast";
+import {
+    listIntegrationsApi,
+    disconnectGoogleCalendarApi,
+    disconnectSlackApi,
+} from "../api/integrations.api";
 
 export function useIntegrations() {
     const [calendarConnected, setCalendarConnected] = useState(false);
+    const [slackConnected, setSlackConnected] = useState(false);
     const [loading, setLoading] = useState(true);
     const [disconnecting, setDisconnecting] = useState(false);
+    const [slackDisconnecting, setSlackDisconnecting] = useState(false);
 
     useEffect(() => {
         listIntegrationsApi()
             .then((list) => {
-                const gcal = list.find((i) => i.provider === "google_calendar");
-                setCalendarConnected(gcal?.connected ?? false);
+                setCalendarConnected(
+                    list.find((i) => i.provider === "google_calendar")?.connected ?? false,
+                );
+                setSlackConnected(
+                    list.find((i) => i.provider === "slack")?.connected ?? false,
+                );
             })
             .catch(() => {})
             .finally(() => setLoading(false));
@@ -37,5 +47,32 @@ export function useIntegrations() {
         }
     };
 
-    return { calendarConnected, loading, disconnecting, connectCalendar, disconnectCalendar };
+    const connectSlack = () => {
+        window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/integrations/slack/connect`;
+    };
+
+    const disconnectSlack = async () => {
+        setSlackDisconnecting(true);
+        try {
+            await disconnectSlackApi();
+            setSlackConnected(false);
+            toast.success("Slack disconnected");
+        } catch {
+            toast.error("Failed to disconnect");
+        } finally {
+            setSlackDisconnecting(false);
+        }
+    };
+
+    return {
+        calendarConnected,
+        slackConnected,
+        loading,
+        disconnecting,
+        slackDisconnecting,
+        connectCalendar,
+        disconnectCalendar,
+        connectSlack,
+        disconnectSlack,
+    };
 }
