@@ -13,6 +13,7 @@ export const envSchema = z.object({
     JWT_EXPIRES_IN: z.string().default("30d"),
 
     CORS_ORIGIN: z.string().default("http://localhost:3000"),
+    API_URL: z.string().url().default("http://localhost:4000"),
 
     BCRYPT_ROUNDS: z.coerce.number().int().min(8).max(15).default(12),
 

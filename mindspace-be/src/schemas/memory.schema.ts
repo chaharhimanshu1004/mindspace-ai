@@ -7,6 +7,7 @@ export const createMemorySchema = z.object({
 export const listMemoriesSchema = z.object({
     limit: z.coerce.number().int().min(1).max(100).optional().default(50),
     cursor: z.string().uuid().optional(),
+    sourceType: z.string().optional(),
 });
 
 export type CreateMemoryInput = z.infer<typeof createMemorySchema>;

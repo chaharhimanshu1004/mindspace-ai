@@ -29,6 +29,7 @@ class Memory(Base):
     topics: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=False, default=list)
 
     status: Mapped[str] = mapped_column(String, nullable=False, default=MemoryStatus.PENDING.value)
+    source_type: Mapped[str] = mapped_column("sourceType", String, nullable=False, default="user_text")
 
     created_at: Mapped[datetime] = mapped_column("createdAt", DateTime, nullable=False)
     updated_at: Mapped[datetime] = mapped_column("updatedAt", DateTime, nullable=False)

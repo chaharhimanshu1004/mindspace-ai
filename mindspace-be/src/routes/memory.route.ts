@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { MemoryController } from "../controllers/memory.controller";
+import { MemorySourceController } from "../controllers/memory-source.controller";
 import { requireAuth } from "../middlewares/require-auth";
 
 const router = Router();
@@ -7,6 +8,7 @@ const router = Router();
 router.use(requireAuth);
 
 router
+    .get("/sources", MemorySourceController.list)
     .post("/", MemoryController.create)
     .get("/", MemoryController.list)
     .get("/:id", MemoryController.get)

@@ -31,6 +31,7 @@ class EnrichmentService:
     @staticmethod
     async def enrich(
         content: str,
+        source_type: str = "user_text",
         tz_name: str = _DEFAULT_TZ,
         provider_name: str | None = None,
     ) -> EnrichmentBundle:
@@ -43,7 +44,7 @@ class EnrichmentService:
         provider = get_provider(provider_name)
         structured = await provider.complete_structured(
             StructuredRequest(
-                prompt=build_enrich_prompt(text, now_iso),
+                prompt=build_enrich_prompt(text, now_iso, source_type),
                 schema=EnrichmentResult,
                 wire_schema=build_enrichment_gemini_schema(),
                 system=ENRICH_SYSTEM,

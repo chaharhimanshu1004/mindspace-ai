@@ -5,10 +5,19 @@ interface CreateArgs {
     content: string;
 }
 
+interface CreateWithSourceArgs {
+    userId: number;
+    content: string;
+    sourceType: string;
+    sourceRef: string | null;
+    sourceMeta: object | null;
+}
+
 interface ListArgs {
     userId: number;
     limit: number;
     cursor?: string;
+    sourceType?: string;
 }
 
 export class MemoryModel {
@@ -19,6 +28,30 @@ export class MemoryModel {
                 content: args.content,
                 status: "pending",
             },
+        });
+    }
+
+    public static async createWithSource(args: CreateWithSourceArgs) {
+        return prisma.memory.create({
+            data: {
+                userId: args.userId,
+                content: args.content,
+                status: "pending",
+                sourceType: args.sourceType,
+                sourceRef: args.sourceRef,
+                sourceMeta: args.sourceMeta ?? undefined,
+            },
+        });
+    }
+
+    public static async countForUser(userId: number): Promise<number> {
+        return prisma.memory.count({ where: { userId } });
+    }
+
+    public static async findManyByIds(args: { userId: number; ids: string[] }) {
+        return prisma.memory.findMany({
+            where: { userId: args.userId, id: { in: args.ids } },
+            orderBy: { createdAt: "desc" },
         });
     }
 
@@ -36,7 +69,10 @@ export class MemoryModel {
 
     public static async listForUser(args: ListArgs) {
         const items = await prisma.memory.findMany({
-            where: { userId: args.userId },
+            where: {
+                userId: args.userId,
+                ...(args.sourceType ? { sourceType: args.sourceType } : {}),
+            },
             orderBy: { createdAt: "desc" },
             take: args.limit + 1,
             ...(args.cursor ? { cursor: { id: args.cursor }, skip: 1 } : {}),

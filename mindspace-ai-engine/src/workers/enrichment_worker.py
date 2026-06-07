@@ -109,21 +109,21 @@ class EnrichmentWorker:
         if snapshot is None:
             return
 
-        memory_id, user_id, content, tz_name = snapshot
+        memory_id, user_id, content, source_type, tz_name = snapshot
 
-        await self._run_stage_a(memory_id=memory_id, user_id=user_id, content=content)
-        await self._run_stage_b(memory_id=memory_id, user_id=user_id, content=content, tz_name=tz_name)
+        await self._run_stage_a(memory_id=memory_id, user_id=user_id, content=content, source_type=source_type)
+        await self._run_stage_b(memory_id=memory_id, user_id=user_id, content=content, source_type=source_type, tz_name=tz_name)
 
         logger.info("Processing memory %s — done", memory_id)
 
     async def _run_stage_b(
-        self, memory_id: UUID, user_id: int, content: str, tz_name: str
+        self, memory_id: UUID, user_id: int, content: str, source_type: str, tz_name: str
     ) -> None:
         if await self._stage_already_done(memory_id, MemoryStatus.ENRICHED):
             logger.info("Memory %s — Stage B already done; skipping", memory_id)
             return
-        logger.info("Memory %s — Stage B: enrich", memory_id)
-        bundle = await EnrichmentService.enrich(content=content, tz_name=tz_name)
+        logger.info("Memory %s — Stage B: enrich (source_type=%s)", memory_id, source_type)
+        bundle = await EnrichmentService.enrich(content=content, source_type=source_type, tz_name=tz_name)
         logger.info(
             "Memory %s — Stage B enrich done (model=%s, entities=%d)",
             memory_id,
@@ -148,7 +148,7 @@ class EnrichmentWorker:
 
     async def _claim(
         self, payload: EnrichJobPayload
-    ) -> tuple[UUID, int, str, str] | None:
+    ) -> tuple[UUID, int, str, str, str] | None:
         async with SessionFactory() as session:
             memory = await MemoryService.get(session, payload.memoryId, payload.userId)
 
@@ -178,18 +178,18 @@ class EnrichmentWorker:
                 except Exception:
                     pass
 
-            return memory.id, memory.user_id, memory.content, tz_name
+            return memory.id, memory.user_id, memory.content, memory.source_type, tz_name
 
     async def _run_stage_a(
-        self, memory_id: UUID, user_id: int, content: str
+        self, memory_id: UUID, user_id: int, content: str, source_type: str = "user_text"
     ) -> None:
         if await self._stage_already_done(memory_id, MemoryStatus.EMBEDDED):
             logger.info("Memory %s — Stage A already done; skipping", memory_id)
             return
         logger.info(
-            "Memory %s — Stage A: embed (content_len=%d)", memory_id, len(content)
+            "Memory %s — Stage A: embed (content_len=%d, source_type=%s)", memory_id, len(content), source_type
         )
-        result = await EmbedService.embed(content=content)
+        result = await EmbedService.embed(content=content, source_type=source_type)
         logger.info(
             "Memory %s — Stage A embed done (model=%s, chunks=%d)",
             memory_id,

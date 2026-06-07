@@ -5,6 +5,7 @@ export interface Memory {
     summary: string | null;
     topics: string[];
     status: string;
+    sourceType: string;
     createdAt: string;
     updatedAt: string;
 }

@@ -15,7 +15,8 @@ export const useDeleteMemory = () => {
         mutationFn: (id: string) => deleteMemoryApi(id),
         onSuccess: (_, id) => {
             // Optimistically update memories list by filtering out the deleted memory
-            qc.setQueryData<MemoryListPage>(memoryKeys.list(), (prev) => {
+            qc.invalidateQueries({ queryKey: memoryKeys.all });
+            qc.setQueryData<MemoryListPage>(memoryKeys.list(undefined), (prev) => {
                 if (!prev) return { items: [], nextCursor: null };
                 return {
                     ...prev,

@@ -5,6 +5,7 @@ export interface PublicMemory {
     summary: string | null;
     topics: string[];
     status: string;
+    sourceType: string;
     createdAt: Date;
     updatedAt: Date;
 }

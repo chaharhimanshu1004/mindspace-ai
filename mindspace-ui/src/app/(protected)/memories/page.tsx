@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { useMemories } from "@/features/memories/hooks/use-memories";
@@ -9,9 +9,11 @@ import { MemoryGrid } from "@/features/memories/components/memory-grid";
 import { MemoryEmpty } from "@/features/memories/components/memory-empty";
 import { MemorySkeletonGrid } from "@/features/memories/components/memory-skeleton-grid";
 import { MemoryComposer } from "@/features/memories/components/memory-composer";
+import { MemorySourceFilter } from "@/features/memories/components/memory-source-filter";
 
 export default function MemoriesPage() {
-    const { data, isLoading, isError } = useMemories();
+    const [sourceType, setSourceType] = useState<string | undefined>("user_text");
+    const { data, isLoading, isError } = useMemories(sourceType);
     const searchParams = useSearchParams();
 
     useEffect(() => {
@@ -29,7 +31,7 @@ export default function MemoriesPage() {
                 <AppHeader />
 
                 <section className="px-6 sm:px-10 pt-10 sm:pt-14 max-w-6xl mx-auto">
-                    <div className="flex items-end justify-between gap-4 mb-6 sm:mb-8">
+                    <div className="flex items-end justify-between gap-4 mb-5 sm:mb-6">
                         <div>
                             <span className="inline-flex items-center gap-2 text-[11px] tracking-[0.18em] uppercase text-ink-subtle">
                                 <span className="w-1.5 h-1.5 rounded-full bg-sage" />
@@ -39,11 +41,15 @@ export default function MemoriesPage() {
                                 Your quiet garden of thoughts
                             </h1>
                         </div>
-                        {memories.length > 0 ? (
+                        {memories.length > 0 && (
                             <span className="hidden sm:inline text-xs text-ink-subtle">
                                 {memories.length} saved
                             </span>
-                        ) : null}
+                        )}
+                    </div>
+
+                    <div className="mb-6">
+                        <MemorySourceFilter value={sourceType} onChange={setSourceType} />
                     </div>
 
                     {isLoading ? (
@@ -60,7 +66,7 @@ export default function MemoriesPage() {
                 </section>
             </div>
 
-            <MemoryComposer />
+            <MemoryComposer disabled={!!sourceType && sourceType !== "user_text"} disabledSource={sourceType} />
         </main>
     );
 }

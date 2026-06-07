@@ -7,6 +7,7 @@ from src.config import env
 from src.llm import EmbedRequest, get_provider
 from src.models import MemoryChunk, MemoryStatus
 from src.services.memory_service import MemoryService
+from src.utils.chunker import chunk_content
 from src.utils.datetimes import utc_now_naive
 from src.utils.logger import get_logger
 
@@ -22,15 +23,17 @@ class EmbedResult:
 
 class EmbedService:
     @staticmethod
-    def _chunk(content: str) -> list[str]:
-        text = content.strip()
-        return [text] if text else []
+    async def embed(
+        content: str,
+        source_type: str = "user_text",
+        provider_name: str | None = None,
+    ) -> EmbedResult:
+        chunks = chunk_content(content) if source_type == "claude_code" else [content.strip()]
 
-    @staticmethod
-    async def embed(content: str, provider_name: str | None = None) -> EmbedResult:
-        chunks = EmbedService._chunk(content) # for now -> only one chunk per memory, have to refactor later
         if not chunks:
             raise ValueError("Cannot embed empty content")
+
+        logger.info("Embedding %d chunk(s) for source_type=%s", len(chunks), source_type)
 
         provider = get_provider(provider_name)
         result = await provider.embed(EmbedRequest(texts=chunks))

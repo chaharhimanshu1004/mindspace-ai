@@ -8,6 +8,7 @@ export const toPublicMemory = (memory: Memory): PublicMemory => ({
     summary: memory.summary,
     topics: memory.topics,
     status: memory.status,
+    sourceType: memory.sourceType,
     createdAt: memory.createdAt,
     updatedAt: memory.updatedAt,
 });
