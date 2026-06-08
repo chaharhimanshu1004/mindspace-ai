@@ -174,22 +174,40 @@ model SlackChannelSubscription {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  cursor SlackMessageCursor?
-
   @@unique([userId, channelId])
   @@index([userId, active])
   @@map("slack_channel_subscriptions")
 }
 
-model SlackMessageCursor {
-  id             Int      @id @default(autoincrement())
-  subscriptionId Int      @unique
-  lastMessageTs  String?
-  updatedAt      DateTime @updatedAt
+model SlackRawEvent {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        Int
+  teamId        String?
+  channelId     String
+  messageTs     String
+  threadTs      String?
+  userSlackId   String?
+  botId         String?
+  subtype       String?
+  text          String   @db.Text
+  rawPayload    Json     @default("{}")
+  receivedAt    DateTime @default(now())
+  sourceMethod  String
 
-  subscription SlackChannelSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  @@unique([userId, channelId, messageTs])
+  @@index([userId, channelId, receivedAt])
+  @@index([receivedAt])
+  @@map("slack_raw_events")
+}
 
-  @@map("slack_message_cursors")
+model SlackRollupState {
+  userId       Int
+  channelId    String
+  day          DateTime @db.Date
+  lastBuiltAt  DateTime
+
+  @@id([userId, channelId, day])
+  @@map("slack_rollup_state")
 }
 
 model OAuthClient {

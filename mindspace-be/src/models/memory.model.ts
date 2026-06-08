@@ -51,7 +51,7 @@ export class MemoryModel {
                 sourceType: args.sourceType,
                 sourceRef: args.sourceRef ?? undefined,
             },
-            select: { id: true, content: true },
+            select: { id: true, content: true, status: true },
         });
 
         if (!existing) {
@@ -68,7 +68,11 @@ export class MemoryModel {
             return { id: created.id, changed: true, created: true };
         }
 
-        if (existing.content === args.content) {
+        const contentChanged = existing.content !== args.content;
+        const isOrphan =
+            existing.status !== "enriched" && existing.status !== "linked";
+
+        if (!contentChanged && !isOrphan) {
             return { id: existing.id, changed: false, created: false };
         }
 

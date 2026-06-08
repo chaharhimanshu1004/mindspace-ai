@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { ZodError } from "zod";
 import { SlackChannelsService } from "../services/slack-channels.service";
 import { SlackSubscriptionService } from "../services/slack-subscription.service";
-import { SlackSyncService } from "../services/slack-sync.service";
+import { CronsServiceConnector } from "../connectors/crons-service.connector";
 import { AppError } from "../errors/app-error";
 import { ResponseHandler } from "../utils/responseHandler";
 import { subscribeChannelSchema, channelIdParamSchema } from "../schemas/slack.schema";
@@ -73,7 +73,7 @@ export class SlackChannelsController {
     public static async syncNow(req: Request, res: Response): Promise<void> {
         try {
             const userId = req.auth!.userId;
-            const summaries = await SlackSyncService.runForUser(userId);
+            const summaries = await CronsServiceConnector.triggerSlackSync(userId);
             ResponseHandler.success(res, summaries, "Sync completed", 200);
         } catch (error) {
             handleError(res, error, "Sync failed");

@@ -38,6 +38,9 @@ export const envSchema = z.object({
     SLACK_CLIENT_SECRET: z.string().min(1),
     SLACK_REDIRECT_URI: z.string().url(),
 
+    INTERNAL_API_TOKEN: z.string().min(16),
+    CRONS_SERVICE_URL: z.string().url().default("http://localhost:4001"),
+
     CREDENTIALS_SECRET: z.string().length(64),
 });
 

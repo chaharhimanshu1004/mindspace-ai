@@ -15,8 +15,5 @@ export interface GoogleCalendarCredentials {
 export interface SlackCredentials {
     accessToken: string;
     teamId: string;
-    teamName: string;
     botUserId: string;
-    scope: string;
-    authedUserId: string;
 }

@@ -21,10 +21,7 @@ export class SlackIntegrationService {
         const plain: SlackCredentials = {
             accessToken: tokens.accessToken,
             teamId: tokens.teamId,
-            teamName: tokens.teamName,
             botUserId: tokens.botUserId,
-            scope: tokens.scope,
-            authedUserId: tokens.authedUserId,
         };
         const credentials = encryptCredentials(plain);
         await IntegrationModel.upsert({ userId, provider: PROVIDER, credentials });

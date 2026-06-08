@@ -8,19 +8,29 @@ interface SlackEnvelope {
     response_metadata?: { next_cursor?: string };
 }
 
-interface ConversationsListResponse extends SlackEnvelope {
-    channels: SlackChannelRaw[];
+interface UsersListResponse extends SlackEnvelope {
+    members: SlackUserRaw[];
 }
 
-export interface SlackChannelRaw {
+export interface SlackMessageRaw {
+    type: string;
+    subtype?: string;
+    user?: string;
+    bot_id?: string;
+    text: string;
+    ts: string;
+    thread_ts?: string;
+}
+
+export interface SlackUserRaw {
     id: string;
     name: string;
-    is_archived: boolean;
-    is_member: boolean;
-    is_private: boolean;
-    num_members?: number;
-    topic?: { value: string };
-    purpose?: { value: string };
+    deleted?: boolean;
+    is_bot?: boolean;
+    profile?: {
+        real_name?: string;
+        display_name?: string;
+    };
 }
 
 const callJson = async <T extends SlackEnvelope>(
@@ -46,24 +56,20 @@ const buildUrl = (path: string, params: Record<string, string>): string => {
     return `${SLACK_API}/${path}?${qs}`;
 };
 
-export const listPublicChannels = async (accessToken: string): Promise<SlackChannelRaw[]> => {
-    const all: SlackChannelRaw[] = [];
+export const listWorkspaceUsers = async (accessToken: string): Promise<SlackUserRaw[]> => {
+    const all: SlackUserRaw[] = [];
     let cursor: string | undefined;
 
     do {
-        const params: Record<string, string> = {
-            types: "public_channel",
-            exclude_archived: "true",
-            limit: "200",
-        };
+        const params: Record<string, string> = { limit: "200" };
         if (cursor) params.cursor = cursor;
 
-        const data = await callJson<ConversationsListResponse>(
-            buildUrl("conversations.list", params),
+        const data = await callJson<UsersListResponse>(
+            buildUrl("users.list", params),
             accessToken,
         );
 
-        all.push(...data.channels);
+        all.push(...data.members);
         cursor = data.response_metadata?.next_cursor || undefined;
     } while (cursor);
 

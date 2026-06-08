@@ -1,7 +1,7 @@
-import { SLACK_SYNC } from "./constants";
+import { env } from "../config/env";
 
 const dateFormatter = new Intl.DateTimeFormat("en-CA", {
-    timeZone: SLACK_SYNC.DAY_TIMEZONE,
+    timeZone: env.SLACK_DAY_TIMEZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",

@@ -1,7 +1,7 @@
+import { env } from "../config/env";
 import type { SlackMessageRaw } from "../connectors/slack-api.connector";
 import type { SlackUserResolver } from "./slack-user-resolver.service";
 import type { SlackSession } from "../schemas/slack-session.types";
-import { SLACK_SYNC } from "../utils/constants";
 import { tsToIstDate } from "../utils/slack-time";
 import { countHumans, formatTranscript, isSystemMessage } from "../utils/slack-transcript";
 
@@ -20,10 +20,25 @@ const buildThreadSession = (
 ): SlackSession | null => {
     const ordered = messages.slice().sort((a, b) => Number(a.ts) - Number(b.ts));
     const content = formatTranscript(ordered, resolver);
-    if (content.length < SLACK_SYNC.NOISE_GATE_CHARS) return null;
-
     const humanCount = countHumans(ordered, resolver);
-    if (humanCount < SLACK_SYNC.NOISE_GATE_HUMAN_COUNT) return null;
+
+    console.log("[session-builder] thread", {
+        threadTs,
+        messageCount: ordered.length,
+        contentLength: content.length,
+        humanCount,
+        gateChars: env.SLACK_NOISE_GATE_CHARS,
+        gateHumans: env.SLACK_NOISE_GATE_HUMAN_COUNT,
+    });
+
+    if (content.length < env.SLACK_NOISE_GATE_CHARS) {
+        console.log("[session-builder] thread DROPPED: content too short");
+        return null;
+    }
+    if (humanCount < env.SLACK_NOISE_GATE_HUMAN_COUNT) {
+        console.log("[session-builder] thread DROPPED: too few humans");
+        return null;
+    }
 
     return {
         sourceRef: `${channelId}:thread:${threadTs}`,
@@ -44,10 +59,33 @@ const buildDaySession = (
 ): SlackSession | null => {
     const ordered = messages.slice().sort((a, b) => Number(a.ts) - Number(b.ts));
     const content = formatTranscript(ordered, resolver);
-    if (content.length < SLACK_SYNC.NOISE_GATE_CHARS) return null;
-
     const humanCount = countHumans(ordered, resolver);
-    if (humanCount < SLACK_SYNC.NOISE_GATE_HUMAN_COUNT) return null;
+
+    const speakerInfo = ordered.map((m) => ({
+        user: m.user,
+        botId: m.bot_id ?? null,
+        subtype: m.subtype ?? null,
+        isBotByResolver: m.user ? resolver.isBot(m.user) : null,
+    }));
+
+    console.log("[session-builder] day", {
+        day,
+        messageCount: ordered.length,
+        contentLength: content.length,
+        humanCount,
+        gateChars: env.SLACK_NOISE_GATE_CHARS,
+        gateHumans: env.SLACK_NOISE_GATE_HUMAN_COUNT,
+        speakerInfo,
+    });
+
+    if (content.length < env.SLACK_NOISE_GATE_CHARS) {
+        console.log("[session-builder] day DROPPED: content too short");
+        return null;
+    }
+    if (humanCount < env.SLACK_NOISE_GATE_HUMAN_COUNT) {
+        console.log("[session-builder] day DROPPED: too few humans");
+        return null;
+    }
 
     return {
         sourceRef: `${channelId}:day:${day}`,
