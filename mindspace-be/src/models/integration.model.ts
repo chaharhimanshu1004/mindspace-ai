@@ -20,6 +20,14 @@ export class IntegrationModel {
         return prisma.userIntegration.findMany({ where: { userId } });
     }
 
+    public static async findUserIdsByProvider(provider: IntegrationProvider): Promise<number[]> {
+        const rows = await prisma.userIntegration.findMany({
+            where: { provider },
+            select: { userId: true },
+        });
+        return rows.map((r) => r.userId);
+    }
+
     public static async delete(args: { userId: number; provider: IntegrationProvider }) {
         return prisma.userIntegration.delete({
             where: { userId_provider: { userId: args.userId, provider: args.provider } },

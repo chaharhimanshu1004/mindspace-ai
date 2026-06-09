@@ -11,6 +11,7 @@ import integrationRouter from "../routes/integration.route"
 import profileRouter from "../routes/profile.route"
 import oauthRouter from "../routes/oauth.route"
 import mcpRouter from "../routes/mcp.route"
+import internalRouter from "../routes/internal.route"
 import { OAuthController } from "../controllers/oauth.controller"
 import { errorHandler } from "../middlewares/error-handler";
 import { notFoundHandler } from "../middlewares/not-found";
@@ -33,7 +34,7 @@ export const createApp = (): Express => {
         },
         credentials: true,
     }));
-    app.use(express.json({ limit: "1mb" }));
+    app.use(express.json({ limit: "10mb" }));
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
     app.use(morgan("dev"));
@@ -48,6 +49,7 @@ export const createApp = (): Express => {
     app.use("/api/integrations", integrationRouter);
     app.use("/api/profile", profileRouter);
     app.use("/api/oauth", oauthRouter);
+    app.use("/api/internal", internalRouter);
     app.use("/mcp", mcpRouter);
     app.get("/.well-known/oauth-authorization-server", OAuthController.discoveryMetadata);
     app.get("/.well-known/oauth-protected-resource", OAuthController.protectedResourceMetadata);

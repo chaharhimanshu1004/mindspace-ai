@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID, uuid4
 
+from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import env
@@ -21,6 +22,9 @@ class EmbedResult:
     model: str
 
 
+_CHUNKED_SOURCE_TYPES = frozenset({"claude_code", "slack"})
+
+
 class EmbedService:
     @staticmethod
     async def embed(
@@ -28,7 +32,11 @@ class EmbedService:
         source_type: str = "user_text",
         provider_name: str | None = None,
     ) -> EmbedResult:
-        chunks = chunk_content(content) if source_type == "claude_code" else [content.strip()]
+        chunks = (
+            chunk_content(content)
+            if source_type in _CHUNKED_SOURCE_TYPES
+            else [content.strip()]
+        )
 
         if not chunks:
             raise ValueError("Cannot embed empty content")
@@ -52,6 +60,10 @@ class EmbedService:
         user_id: int,
         result: EmbedResult,
     ) -> int:
+        await session.execute(
+            delete(MemoryChunk).where(MemoryChunk.memory_id == memory_id)
+        )
+
         now = utc_now_naive()
         rows = [
             MemoryChunk(

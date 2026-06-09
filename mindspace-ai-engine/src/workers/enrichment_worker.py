@@ -142,9 +142,14 @@ class EnrichmentWorker:
             tz_name=tz_name,
         )
 
-    _RESUMABLE_STATUSES = frozenset(
-        {MemoryStatus.PENDING.value, MemoryStatus.EMBEDDED.value}
+    _SKIP_STATUSES = frozenset({MemoryStatus.FAILED.value})
+    _ALREADY_PROCESSED = frozenset(
+        {MemoryStatus.ENRICHED.value, MemoryStatus.LINKED.value}
     )
+
+    async def _reset_to_pending(self, memory_id: UUID) -> None:
+        async with SessionFactory() as session, session.begin():
+            await MemoryService.set_status(session, memory_id, MemoryStatus.PENDING)
 
     async def _claim(
         self, payload: EnrichJobPayload
@@ -160,13 +165,15 @@ class EnrichmentWorker:
                 )
                 return None
 
-            if memory.status not in self._RESUMABLE_STATUSES:
+            if memory.status in self._SKIP_STATUSES:
                 logger.info(
-                    "Memory %s already in status '%s'; skipping",
+                    "Memory %s in skip status '%s'; skipping",
                     memory.id,
                     memory.status,
                 )
                 return None
+
+            needs_reset = memory.status in self._ALREADY_PROCESSED
 
             from src.utils.credentials import decrypt_credentials
             integration = await IntegrationRepo.get_google_calendar(session, memory.user_id)
@@ -178,7 +185,22 @@ class EnrichmentWorker:
                 except Exception:
                     pass
 
-            return memory.id, memory.user_id, memory.content, memory.source_type, tz_name
+            snapshot = (
+                memory.id,
+                memory.user_id,
+                memory.content,
+                memory.source_type,
+                tz_name,
+            )
+
+        if needs_reset:
+            await self._reset_to_pending(snapshot[0])
+            logger.info(
+                "Memory %s was already processed; reset to pending for re-processing",
+                snapshot[0],
+            )
+
+        return snapshot
 
     async def _run_stage_a(
         self, memory_id: UUID, user_id: int, content: str, source_type: str = "user_text"

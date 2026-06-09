@@ -44,6 +44,49 @@ export class MemoryModel {
         });
     }
 
+    public static async upsertContentBySource(args: CreateWithSourceArgs) {
+        const existing = await prisma.memory.findFirst({
+            where: {
+                userId: args.userId,
+                sourceType: args.sourceType,
+                sourceRef: args.sourceRef ?? undefined,
+            },
+            select: { id: true, content: true, status: true },
+        });
+
+        if (!existing) {
+            const created = await prisma.memory.create({
+                data: {
+                    userId: args.userId,
+                    content: args.content,
+                    status: "pending",
+                    sourceType: args.sourceType,
+                    sourceRef: args.sourceRef,
+                    sourceMeta: args.sourceMeta ?? undefined,
+                },
+            });
+            return { id: created.id, changed: true, created: true };
+        }
+
+        const contentChanged = existing.content !== args.content;
+        const isOrphan =
+            existing.status !== "enriched" && existing.status !== "linked";
+
+        if (!contentChanged && !isOrphan) {
+            return { id: existing.id, changed: false, created: false };
+        }
+
+        const updated = await prisma.memory.update({
+            where: { id: existing.id },
+            data: {
+                content: args.content,
+                sourceMeta: args.sourceMeta ?? undefined,
+                status: "pending",
+            },
+        });
+        return { id: updated.id, changed: true, created: false };
+    }
+
     public static async countForUser(userId: number): Promise<number> {
         return prisma.memory.count({ where: { userId } });
     }

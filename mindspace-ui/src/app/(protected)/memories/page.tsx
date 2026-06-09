@@ -21,6 +21,12 @@ export default function MemoriesPage() {
             toast.success("Google Calendar connected");
             window.history.replaceState({}, "", "/memories");
         }
+        if (searchParams.get("integration") === "slack") {
+            const status = searchParams.get("status");
+            if (status === "connected") toast.success("Slack connected");
+            if (status === "denied") toast.error("Slack connection denied");
+            window.history.replaceState({}, "", "/memories");
+        }
     }, [searchParams]);
 
     const memories = data?.items ?? [];

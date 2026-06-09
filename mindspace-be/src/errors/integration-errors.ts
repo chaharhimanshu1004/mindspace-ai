@@ -8,3 +8,9 @@ export const oauthExchangeError = () =>
 
 export const tokenRefreshError = () =>
     new AppError({ message: "Failed to refresh access token", status: 502, code: "TOKEN_REFRESH_FAILED" });
+
+export const slackApiError = (detail: string) =>
+    new AppError({ message: `Slack API error: ${detail}`, status: 502, code: "SLACK_API_ERROR" });
+
+export const slackSubscriptionNotFoundError = () =>
+    new AppError({ message: "Slack channel not subscribed", status: 404, code: "SLACK_SUBSCRIPTION_NOT_FOUND" });

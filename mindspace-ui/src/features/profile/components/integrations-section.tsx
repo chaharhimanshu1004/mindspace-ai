@@ -1,10 +1,21 @@
 "use client";
 
 import { GoogleCalendarCard } from "./google-calendar-card";
+import { SlackCard } from "./slack-card";
 import { useIntegrations } from "../hooks/use-integrations";
 
 export function IntegrationsSection() {
-    const { calendarConnected, loading, disconnecting, connectCalendar, disconnectCalendar } = useIntegrations();
+    const {
+        calendarConnected,
+        slackConnected,
+        loading,
+        disconnecting,
+        slackDisconnecting,
+        connectCalendar,
+        disconnectCalendar,
+        connectSlack,
+        disconnectSlack,
+    } = useIntegrations();
 
     return (
         <div>
@@ -22,6 +33,13 @@ export function IntegrationsSection() {
                     disconnecting={disconnecting}
                     onConnect={connectCalendar}
                     onDisconnect={disconnectCalendar}
+                />
+                <SlackCard
+                    connected={slackConnected}
+                    loading={loading}
+                    disconnecting={slackDisconnecting}
+                    onConnect={connectSlack}
+                    onDisconnect={disconnectSlack}
                 />
             </div>
         </div>

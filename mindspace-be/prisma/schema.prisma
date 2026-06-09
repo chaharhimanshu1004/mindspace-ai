@@ -165,6 +165,51 @@ model MemorySource {
   @@map("memory_sources")
 }
 
+model SlackChannelSubscription {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  channelId   String
+  channelName String
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, channelId])
+  @@index([userId, active])
+  @@map("slack_channel_subscriptions")
+}
+
+model SlackRawEvent {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        Int
+  teamId        String?
+  channelId     String
+  messageTs     String
+  threadTs      String?
+  userSlackId   String?
+  botId         String?
+  subtype       String?
+  text          String   @db.Text
+  rawPayload    Json     @default("{}")
+  receivedAt    DateTime @default(now())
+  sourceMethod  String
+
+  @@unique([userId, channelId, messageTs])
+  @@index([userId, channelId, receivedAt])
+  @@index([receivedAt])
+  @@map("slack_raw_events")
+}
+
+model SlackRollupState {
+  userId       Int
+  channelId    String
+  day          DateTime @db.Date
+  lastBuiltAt  DateTime
+
+  @@id([userId, channelId, day])
+  @@map("slack_rollup_state")
+}
+
 model OAuthClient {
   id           Int      @id @default(autoincrement())
   name         String
