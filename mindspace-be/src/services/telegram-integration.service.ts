@@ -5,6 +5,7 @@ import { IntegrationModel } from "../models/integration.model";
 import { MemoryModel } from "../models/memory.model";
 import { MemoryQueueService } from "./memoryQueue.service";
 import { ChatService } from "./chat.service";
+import { RateLimitService } from "./rate-limit.service";
 import { AppError } from "../errors/app-error";
 import { encryptCredentials, decryptCredentials } from "../utils/credentials.cipher";
 import type { TelegramCredentials } from "../schemas/integration.types";
@@ -105,7 +106,9 @@ export class TelegramIntegrationService {
                 code: "TELEGRAM_UNLINKED",
             });
         }
-        
+
+        await RateLimitService.consume({ scope: "telegram", id: userId });
+
         const memory = await MemoryModel.createWithSource({
             userId,
             content: args.text,
@@ -131,7 +134,9 @@ export class TelegramIntegrationService {
                 code: "TELEGRAM_UNLINKED",
             });
         }
-        
+
+        await RateLimitService.consume({ scope: "telegram", id: userId });
+
         try {
             const result = await ChatService.ask({
                 userId,

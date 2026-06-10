@@ -71,9 +71,12 @@ export class TelegramWebhookController {
                 } catch (err) {
                     console.error("[telegram-webhook] Ask query failed:", err);
                     const isUnlinked = err instanceof Error && err.message.includes("TELEGRAM_UNLINKED");
-                    const errMsg = isUnlinked
-                        ? "Your Telegram account is not linked yet. Please go to your MindSpace settings and connect your Telegram bot."
-                        : "Sorry, I had trouble recalling your memories. Please try again later.";
+                    const isRateLimited = err instanceof Error && err.message.includes("HTTP 429");
+                    const errMsg = isRateLimited
+                        ? "Too Many Requests\n\nYou're sending messages too fast (max 5 per minute). Please try again after some time."
+                        : isUnlinked
+                            ? "Your Telegram account is not linked yet. Please go to your MindSpace settings and connect your Telegram bot."
+                            : "Sorry, I had trouble recalling your memories. Please try again later.";
                     await TelegramApiConnector.sendMessage(chatId, errMsg);
                 }
                 ResponseHandler.success(res, { ok: true }, "Query processed", 200);
@@ -94,9 +97,12 @@ export class TelegramWebhookController {
                 } catch (err) {
                     console.error("[telegram-webhook] Save memory failed:", err);
                     const isUnlinked = err instanceof Error && err.message.includes("TELEGRAM_UNLINKED");
-                    const errMsg = isUnlinked
-                        ? "Your Telegram account is not linked yet. Please go to your MindSpace settings and connect your Telegram bot."
-                        : "Failed to save memory. Please try again later.";
+                    const isRateLimited = err instanceof Error && err.message.includes("HTTP 429");
+                    const errMsg = isRateLimited
+                        ? "Too Many Requests\n\nYou're sending messages too fast (max 5 per minute). Please try again after some time."
+                        : isUnlinked
+                            ? "Your Telegram account is not linked yet. Please go to your MindSpace settings and connect your Telegram bot."
+                            : "Failed to save memory. Please try again later.";
                     await TelegramApiConnector.sendMessage(chatId, errMsg);
                 }
                 ResponseHandler.success(res, { ok: true }, "Save processed", 200);

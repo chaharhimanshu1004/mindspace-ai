@@ -43,6 +43,9 @@ export const envSchema = z.object({
 
     CREDENTIALS_SECRET: z.string().length(64),
     TELEGRAM_BOT_USERNAME: z.string().default("MindSpaceBrainBot"),
+
+    RATE_LIMIT_MAX: z.coerce.number().int().positive().default(5),
+    RATE_LIMIT_WINDOW_SEC: z.coerce.number().int().positive().default(60),
 });
 
 export type Env = z.infer<typeof envSchema>;
