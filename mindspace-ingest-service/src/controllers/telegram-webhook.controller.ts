@@ -48,7 +48,7 @@ export class TelegramWebhookController {
 
                 try {
                     await BeInternalConnector.linkTelegram(telegramUserId, token);
-                    await TelegramApiConnector.sendMessage(chatId, "Connection successful! 🎉 You can now send text notes here, and they will be instantly saved to your MindSpace.");
+                    await TelegramApiConnector.sendMessage(chatId, "Connection successful! 🎉 Use /save <note> to store a memory, and /ask <question> to query your MindSpace.");
                 } catch (err) {
                     console.error("[telegram-webhook] Pairing failed:", err);
                     await TelegramApiConnector.sendMessage(chatId, "Pairing failed. The link may have expired or is invalid. Please get a new link from the MindSpace Settings.");
@@ -80,19 +80,31 @@ export class TelegramWebhookController {
                 return;
             }
 
-            try {
-                await BeInternalConnector.sendTelegramMessage(telegramUserId, text, false);
-                await TelegramApiConnector.sendMessage(chatId, "Saved to your MindSpace! 🧠");
-            } catch (err) {
-                console.error("[telegram-webhook] Save memory failed:", err);
-                const isUnlinked = err instanceof Error && err.message.includes("TELEGRAM_UNLINKED");
-                const errMsg = isUnlinked
-                    ? "Your Telegram account is not linked yet. Please go to your MindSpace settings and connect your Telegram bot."
-                    : "Failed to save memory. Please try again later.";
-                await TelegramApiConnector.sendMessage(chatId, errMsg);
+            if (text.startsWith("/save ")) {
+                const note = text.slice("/save ".length).trim();
+                if (!note) {
+                    await TelegramApiConnector.sendMessage(chatId, "Please provide some text after the /save command.");
+                    ResponseHandler.success(res, { ok: true }, "Empty note", 200);
+                    return;
+                }
+
+                try {
+                    await BeInternalConnector.sendTelegramMessage(telegramUserId, note, false);
+                    await TelegramApiConnector.sendMessage(chatId, "Saved to your MindSpace! 🧠");
+                } catch (err) {
+                    console.error("[telegram-webhook] Save memory failed:", err);
+                    const isUnlinked = err instanceof Error && err.message.includes("TELEGRAM_UNLINKED");
+                    const errMsg = isUnlinked
+                        ? "Your Telegram account is not linked yet. Please go to your MindSpace settings and connect your Telegram bot."
+                        : "Failed to save memory. Please try again later.";
+                    await TelegramApiConnector.sendMessage(chatId, errMsg);
+                }
+                ResponseHandler.success(res, { ok: true }, "Save processed", 200);
+                return;
             }
 
-            ResponseHandler.success(res, { ok: true }, "Webhook processed", 200);
+            await TelegramApiConnector.sendMessage(chatId, "Please start your message with /save to store a note, or /ask to query your MindSpace.");
+            ResponseHandler.success(res, { ok: true }, "Unrecognized command", 200);
         } catch (error) {
             handleError(res, error, "Telegram webhook handler failed");
         }
