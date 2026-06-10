@@ -13,3 +13,14 @@ export const disconnectGoogleCalendarApi = (): Promise<void> =>
 
 export const disconnectSlackApi = (): Promise<void> =>
     apiClient<void>({ method: "DELETE", path: "/integrations/slack", auth: true });
+
+export const disconnectTelegramApi = (): Promise<void> =>
+    apiClient<void>({ method: "DELETE", path: "/integrations/telegram", auth: true });
+
+export interface TelegramPairingResponse {
+    token: string;
+    link: string;
+}
+
+export const getTelegramPairingLinkApi = (): Promise<TelegramPairingResponse> =>
+    apiClient<TelegramPairingResponse>({ method: "GET", path: "/integrations/telegram/connect", auth: true });

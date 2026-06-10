@@ -2,19 +2,24 @@
 
 import { GoogleCalendarCard } from "./google-calendar-card";
 import { SlackCard } from "./slack-card";
+import { TelegramCard } from "./telegram-card";
 import { useIntegrations } from "../hooks/use-integrations";
 
 export function IntegrationsSection() {
     const {
         calendarConnected,
         slackConnected,
+        telegramConnected,
         loading,
         disconnecting,
         slackDisconnecting,
+        telegramDisconnecting,
         connectCalendar,
         disconnectCalendar,
         connectSlack,
         disconnectSlack,
+        connectTelegram,
+        disconnectTelegram,
     } = useIntegrations();
 
     return (
@@ -40,6 +45,13 @@ export function IntegrationsSection() {
                     disconnecting={slackDisconnecting}
                     onConnect={connectSlack}
                     onDisconnect={disconnectSlack}
+                />
+                <TelegramCard
+                    connected={telegramConnected}
+                    loading={loading}
+                    disconnecting={telegramDisconnecting}
+                    onConnect={connectTelegram}
+                    onDisconnect={disconnectTelegram}
                 />
             </div>
         </div>

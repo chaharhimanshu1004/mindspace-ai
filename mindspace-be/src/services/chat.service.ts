@@ -32,6 +32,14 @@ interface HistoryArgs {
 
 const HISTORY_CONTEXT_LIMIT = 6;
 
+const filterCitedToHits = (
+    citedIds: string[],
+    hits: SearchHit[],
+): string[] => {
+    const valid = new Set(hits.map((hit) => hit.memoryId));
+    return citedIds.filter((id) => valid.has(id));
+};
+
 const toSources = (
     hits: SearchHit[],
     citedIds: string[],
@@ -83,7 +91,8 @@ export class ChatService {
             }));
 
         const llm = await callLlm(args.message, hits, history);
-        const sources = toSources(hits, llm.citedMemoryIds);
+        const citedMemoryIds = filterCitedToHits(llm.citedMemoryIds, hits); // temporary fix because of llm missing some 'chars' from memoryId uuid
+        const sources = toSources(hits, citedMemoryIds);
 
         await ChatModel.appendMessage({
             conversationId: conversation.id,
@@ -95,7 +104,7 @@ export class ChatService {
             conversationId: conversation.id,
             role: "assistant",
             content: llm.answer,
-            retrievedIds: llm.citedMemoryIds,
+            retrievedIds: citedMemoryIds,
         });
 
         return {

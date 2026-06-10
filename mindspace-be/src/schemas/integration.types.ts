@@ -1,4 +1,4 @@
-export type IntegrationProvider = "google_calendar" | "slack";
+export type IntegrationProvider = "google_calendar" | "slack" | "telegram";
 
 export interface PublicIntegration {
     provider: IntegrationProvider;
@@ -16,4 +16,8 @@ export interface SlackCredentials {
     accessToken: string;
     teamId: string;
     botUserId: string;
+}
+
+export interface TelegramCredentials {
+    telegramUserId: string;
 }

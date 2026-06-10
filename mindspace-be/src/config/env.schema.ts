@@ -42,6 +42,7 @@ export const envSchema = z.object({
     CRONS_SERVICE_URL: z.string().url().default("http://localhost:4001"),
 
     CREDENTIALS_SECRET: z.string().length(64),
+    TELEGRAM_BOT_USERNAME: z.string().default("MindSpaceBrainBot"),
 });
 
 export type Env = z.infer<typeof envSchema>;
