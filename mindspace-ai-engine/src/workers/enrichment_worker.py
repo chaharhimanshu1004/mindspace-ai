@@ -37,6 +37,10 @@ class EnrichmentWorker:
     def consumer_name(self) -> str:
         return self._consumer.consumer
 
+    @property
+    def consumer(self) -> StreamConsumer:
+        return self._consumer
+
     def request_stop(self) -> None:
         self._stop.set()
 
@@ -68,11 +72,11 @@ class EnrichmentWorker:
                 message.message_id,
                 dict(message.fields),
             )
-            await self._handle(message)
+            await self.handle(message)
 
         logger.info("Enrichment worker stopped")
 
-    async def _handle(self, message: StreamMessage) -> None:
+    async def handle(self, message: StreamMessage) -> None:
         try:
             payload = EnrichJobPayload.from_stream_fields(message.fields)
         except Exception:
@@ -82,6 +86,7 @@ class EnrichmentWorker:
                 message.message_id,
             )
             await self._dead_letter(message, reason="invalid-payload")
+            await self._consumer.ack(message.message_id)
             return
 
         try:
