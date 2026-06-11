@@ -20,6 +20,10 @@ export const useCreateMemory = () => {
             });
         },
         onError: (error) => {
+            if (error instanceof ApiError && error.status === 429) {
+                toast.error("Too many requests, please try again after some time.");
+                return;
+            }
             const message =
                 error instanceof ApiError
                     ? error.message

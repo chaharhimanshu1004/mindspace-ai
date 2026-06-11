@@ -6,14 +6,18 @@ import {
     listIntegrationsApi,
     disconnectGoogleCalendarApi,
     disconnectSlackApi,
+    disconnectTelegramApi,
+    getTelegramPairingLinkApi,
 } from "../api/integrations.api";
 
 export function useIntegrations() {
     const [calendarConnected, setCalendarConnected] = useState(false);
     const [slackConnected, setSlackConnected] = useState(false);
+    const [telegramConnected, setTelegramConnected] = useState(false);
     const [loading, setLoading] = useState(true);
     const [disconnecting, setDisconnecting] = useState(false);
     const [slackDisconnecting, setSlackDisconnecting] = useState(false);
+    const [telegramDisconnecting, setTelegramDisconnecting] = useState(false);
 
     useEffect(() => {
         listIntegrationsApi()
@@ -23,6 +27,9 @@ export function useIntegrations() {
                 );
                 setSlackConnected(
                     list.find((i) => i.provider === "slack")?.connected ?? false,
+                );
+                setTelegramConnected(
+                    list.find((i) => i.provider === "telegram")?.connected ?? false,
                 );
             })
             .catch(() => {})
@@ -64,15 +71,41 @@ export function useIntegrations() {
         }
     };
 
+    const connectTelegram = async () => {
+        try {
+            const res = await getTelegramPairingLinkApi();
+            window.open(res.link, "_blank");
+        } catch {
+            toast.error("Failed to generate Telegram link");
+        }
+    };
+
+    const disconnectTelegram = async () => {
+        setTelegramDisconnecting(true);
+        try {
+            await disconnectTelegramApi();
+            setTelegramConnected(false);
+            toast.success("Telegram disconnected");
+        } catch {
+            toast.error("Failed to disconnect");
+        } finally {
+            setTelegramDisconnecting(false);
+        }
+    };
+
     return {
         calendarConnected,
         slackConnected,
+        telegramConnected,
         loading,
         disconnecting,
         slackDisconnecting,
+        telegramDisconnecting,
         connectCalendar,
         disconnectCalendar,
         connectSlack,
         disconnectSlack,
+        connectTelegram,
+        disconnectTelegram,
     };
 }

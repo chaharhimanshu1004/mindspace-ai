@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const chatAnswerSchema = z.object({
     answer: z.string().min(1),
-    citedMemoryIds: z.array(z.string().uuid()).default([]),
+    citedMemoryIds: z.array(z.string()).default([]),
 });
 
 export type ChatAnswerLLM = z.infer<typeof chatAnswerSchema>;

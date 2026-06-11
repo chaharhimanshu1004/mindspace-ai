@@ -20,6 +20,10 @@ export class IntegrationModel {
         return prisma.userIntegration.findMany({ where: { userId } });
     }
 
+    public static async findAllByProvider(provider: IntegrationProvider) {
+        return prisma.userIntegration.findMany({ where: { provider } });
+    }
+
     public static async findUserIdsByProvider(provider: IntegrationProvider): Promise<number[]> {
         const rows = await prisma.userIntegration.findMany({
             where: { provider },

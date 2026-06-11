@@ -17,6 +17,9 @@ export const envSchema = z.object({
     SLACK_DAY_TIMEZONE: z.string().default("Asia/Kolkata"),
     SLACK_NOISE_GATE_CHARS: z.coerce.number().int().min(0).default(40),
     SLACK_NOISE_GATE_HUMAN_COUNT: z.coerce.number().int().min(1).default(2),
+
+    TELEGRAM_BOT_TOKEN: z.string().min(1),
+    TELEGRAM_WEBHOOK_SECRET: z.string().min(16),
 });
 
 export type Env = z.infer<typeof envSchema>;

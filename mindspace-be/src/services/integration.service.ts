@@ -40,7 +40,7 @@ export class IntegrationService {
         const rows = await IntegrationModel.findAllByUser(userId);
         const connectedProviders = new Set(rows.map((r) => r.provider));
 
-        const all: IntegrationProvider[] = ["google_calendar", "slack"];
+        const all: IntegrationProvider[] = ["google_calendar", "slack", "telegram"];
         return all.map((p) => ({ provider: p, connected: connectedProviders.has(p) }));
     }
 
