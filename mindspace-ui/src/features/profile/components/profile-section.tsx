@@ -37,7 +37,7 @@ export function ProfileSection() {
 
     return (
         <div>
-            <h3 className="text-[15px] font-medium text-ink tracking-tight">Profile</h3>
+            <h3 className="text-[16px] font-bold tracking-tight text-[#2F3441]">Profile</h3>
             <p className="mt-1 text-[13px] text-ink-muted">Your identity inside MindSpace.</p>
 
             <div className="mt-6 flex items-center gap-4">
@@ -61,8 +61,8 @@ export function ProfileSection() {
                 </div>
             </div>
 
-            <div className="mt-6 bg-[#F9F9F5] border border-ink/8 rounded-2xl px-4">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4 py-3 border-b border-ink/6">
+            <div className="mt-6 bg-white border border-[#E9E8E2] rounded-2xl px-4 shadow-soft">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4 py-3 border-b border-[#F1F0EB]">
                     <span className="text-[13px] text-ink-muted shrink-0">Name</span>
                     {editing ? (
                         <div className="flex items-center gap-2 min-w-0">

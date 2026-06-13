@@ -76,6 +76,17 @@ export function ChatThread() {
                     <ChatEmpty />
                 ) : (
                     <div className="mx-auto max-w-3xl flex flex-col gap-6">
+                        <div className="pb-2">
+                            <span className="inline-flex items-center gap-2 rounded-full border border-[#6366F1]/15 bg-gradient-to-r from-[#EEF0FF] to-[#F5F3FF] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] shadow-soft">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#6366F1] shadow-[0_0_10px_rgba(99,102,241,0.7)]" />
+                                <span className="bg-gradient-to-r from-[#6366F1] to-[#818CF8] bg-clip-text text-transparent">
+                                    ask your second brain
+                                </span>
+                            </span>
+                            <h1 className="mt-3 text-[26px] sm:text-[32px] font-bold leading-tight tracking-tight text-[#2F3441]">
+                                What were you thinking about?
+                            </h1>
+                        </div>
                         {messages.map((m) => (
                             <ChatMessage
                                 key={m.id}

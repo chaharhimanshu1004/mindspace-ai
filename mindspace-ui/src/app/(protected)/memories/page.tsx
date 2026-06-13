@@ -10,6 +10,7 @@ import { MemoryEmpty } from "@/features/memories/components/memory-empty";
 import { MemorySkeletonGrid } from "@/features/memories/components/memory-skeleton-grid";
 import { MemoryComposer } from "@/features/memories/components/memory-composer";
 import { MemorySourceFilter } from "@/features/memories/components/memory-source-filter";
+import { LandingBackground } from "@/components/landing/landing-background";
 
 export default function MemoriesPage() {
     const [sourceType, setSourceType] = useState<string | undefined>("user_text");
@@ -32,23 +33,26 @@ export default function MemoriesPage() {
     const memories = data?.items ?? [];
 
     return (
-        <main className="min-h-screen calm-gradient">
-            <div className="grain min-h-screen pb-40">
+        <main className="relative min-h-screen bg-[#FAFAF7]">
+            <LandingBackground />
+            <div className="min-h-screen pb-40">
                 <AppHeader />
 
                 <section className="px-6 sm:px-10 pt-10 sm:pt-14 max-w-6xl mx-auto">
                     <div className="flex items-end justify-between gap-4 mb-5 sm:mb-6">
                         <div>
-                            <span className="inline-flex items-center gap-2 text-[11px] tracking-[0.18em] uppercase text-ink-subtle">
-                                <span className="w-1.5 h-1.5 rounded-full bg-sage" />
-                                memories
+                            <span className="inline-flex items-center gap-2 rounded-full border border-[#6366F1]/15 bg-gradient-to-r from-[#EEF0FF] to-[#F5F3FF] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] shadow-soft">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#6366F1] shadow-[0_0_10px_rgba(99,102,241,0.7)]" />
+                                <span className="bg-gradient-to-r from-[#6366F1] to-[#818CF8] bg-clip-text text-transparent">
+                                    memories
+                                </span>
                             </span>
-                            <h1 className="mt-2 text-[28px] sm:text-[34px] leading-tight tracking-tight text-ink font-medium">
+                            <h1 className="mt-3 text-[28px] sm:text-[36px] font-bold leading-tight tracking-tight text-[#2F3441]">
                                 Your quiet garden of thoughts
                             </h1>
                         </div>
                         {memories.length > 0 && (
-                            <span className="hidden sm:inline text-xs text-ink-subtle">
+                            <span className="hidden sm:inline-flex items-center rounded-full border border-[#E9E8E2] bg-white px-3 py-1 text-xs font-semibold text-[#6B7280] shadow-soft">
                                 {memories.length} saved
                             </span>
                         )}

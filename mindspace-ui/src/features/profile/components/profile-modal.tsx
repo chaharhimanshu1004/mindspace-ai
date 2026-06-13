@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { X } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
 import { ProfileModalNav } from "./profile-modal-nav";
 import { ProfileSection } from "./profile-section";
@@ -38,10 +39,10 @@ export function ProfileModal({ open, onClose }: Props) {
 
     return (
         <Modal open={open} onClose={onClose} labelledBy="profile-modal-title">
-            <header className="flex items-center justify-between px-6 sm:px-7 h-14 border-b border-ink/8 bg-[#F0F0EC]/70 backdrop-blur-sm shrink-0">
+            <header className="flex items-center justify-between px-6 sm:px-7 h-14 border-b border-[#E9E8E2] bg-white/80 backdrop-blur-sm shrink-0">
                 <h2
                     id="profile-modal-title"
-                    className="text-ink font-medium text-[15px] tracking-tight"
+                    className="text-[15px] font-bold tracking-tight text-[#2F3441]"
                 >
                     Settings
                 </h2>
@@ -51,23 +52,12 @@ export function ProfileModal({ open, onClose }: Props) {
                     aria-label="Close settings"
                     className={[
                         "w-8 h-8 rounded-full flex items-center justify-center",
-                        "text-ink-muted hover:text-ink hover:bg-ink/5",
+                        "text-[#9CA3AF] hover:text-[#2F3441] hover:bg-[#2F3441]/5",
                         "transition-colors duration-200 ease-calm",
                         "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-soft/40",
                     ].join(" ")}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.6"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="w-4 h-4"
-                    >
-                        <path d="M18 6L6 18M6 6l12 12" />
-                    </svg>
+                    <X className="w-4 h-4" />
                 </button>
             </header>
 

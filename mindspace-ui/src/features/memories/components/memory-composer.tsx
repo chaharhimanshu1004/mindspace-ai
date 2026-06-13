@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { ArrowUp } from "lucide-react";
 
 import { useCreateMemory } from "../hooks/use-create-memory";
 import { createMemorySchema } from "../memory.schemas";
@@ -10,6 +11,7 @@ const MAX_HEIGHT_PX = 180;
 const SOURCE_HINTS: Record<string, string> = {
     claude_code: "Memories from Claude are synced automatically — you can't add them directly",
     slack: "Memories from Slack are synced automatically — you can't add them directly",
+    telegram: "Memories from Telegram are synced automatically — you can't add them directly",
 };
 
 interface Props {
@@ -97,14 +99,14 @@ export function MemoryComposer({ disabled = false, disabledSource }: Props) {
                             "transition-all duration-300 ease-calm",
                             "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-soft/40 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
                             canSend
-                                ? "bg-indigo-soft text-white shadow-soft hover:bg-indigo-hover hover:shadow-lift"
+                                ? "bg-gradient-to-br from-[#818CF8] to-[#6366F1] text-white shadow-soft hover:shadow-lift"
                                 : "bg-canvas text-ink-subtle border border-border-subtle",
                         ].join(" ")}
                     >
                         {mutation.isPending ? (
                             <span className="text-sm">…</span>
                         ) : (
-                            <SendIcon />
+                            <ArrowUp className="h-[18px] w-[18px]" />
                         )}
                     </button>
                 </div>
@@ -117,23 +119,5 @@ export function MemoryComposer({ disabled = false, disabledSource }: Props) {
                 </p>
             </div>
         </div>
-    );
-}
-
-function SendIcon() {
-    return (
-        <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden
-        >
-            <path d="M5 12l14-7-5 14-3-6-6-1z" />
-        </svg>
     );
 }

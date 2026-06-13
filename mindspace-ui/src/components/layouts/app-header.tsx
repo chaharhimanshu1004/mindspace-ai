@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Wordmark } from "@/components/brand/wordmark";
+import { BrandMark } from "@/components/brand/brand-mark";
 import { ProfileButton } from "@/features/profile/components/profile-button";
 
 const navItems = [
@@ -14,31 +14,33 @@ export function AppHeader() {
     const pathname = usePathname();
 
     return (
-        <header className="pl-14 sm:pl-20 pr-10 sm:pr-14 pt-6 sm:pt-8 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3 sm:gap-6 min-w-0">
-                <Wordmark href="/memories" />
-                <nav className="flex items-center gap-1 text-sm">
-                    {navItems.map((item) => {
-                        const active = pathname?.startsWith(item.href);
-                        return (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className={[
-                                    "px-3 py-1.5 rounded-xl transition-colors",
-                                    active
-                                        ? "text-indigo-soft bg-indigo-tint font-medium"
-                                        : "text-ink-muted hover:text-ink",
-                                ].join(" ")}
-                            >
-                                {item.label}
-                            </Link>
-                        );
-                    })}
-                </nav>
-            </div>
-            <div className="flex items-center gap-3">
-                <ProfileButton />
+        <header className="sticky top-0 z-40 border-b border-[#E9E8E2]/60 bg-[#FAFAF7]/80 backdrop-blur-md">
+            <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4 sm:px-10">
+                <div className="flex items-center gap-3 sm:gap-6 min-w-0">
+                    <BrandMark href="/memories" />
+                    <nav className="flex items-center gap-1 text-sm">
+                        {navItems.map((item) => {
+                            const active = pathname?.startsWith(item.href);
+                            return (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className={[
+                                        "px-3.5 py-1.5 rounded-xl font-semibold transition-all duration-300 ease-calm",
+                                        active
+                                            ? "bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white shadow-soft"
+                                            : "text-[#6B7280] hover:text-[#2F3441]",
+                                    ].join(" ")}
+                                >
+                                    {item.label}
+                                </Link>
+                            );
+                        })}
+                    </nav>
+                </div>
+                <div className="flex items-center gap-3">
+                    <ProfileButton />
+                </div>
             </div>
         </header>
     );
