@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Wordmark } from "@/components/brand/wordmark";
+import { BrandMark } from "@/components/brand/brand-mark";
 
 const groups = [
     {
@@ -33,7 +33,7 @@ export function LandingFooter() {
         <footer className="border-t border-border-subtle">
             <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-6 py-14 sm:px-10 md:grid-cols-4">
                 <div className="col-span-2 md:col-span-1">
-                    <Wordmark />
+                    <BrandMark href="/" />
                     <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-muted">
                         A continuous second brain that captures, embeds, and
                         connects everything you think.
