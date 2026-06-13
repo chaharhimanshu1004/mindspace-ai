@@ -3,9 +3,10 @@ import { BrandMark } from "@/components/brand/brand-mark";
 import { NavActions } from "./nav-actions";
 
 const links = [
-    { label: "Features", href: "#features" },
-    { label: "Integrations", href: "#integrations" },
-    { label: "Pricing", href: "#pricing" },
+    { label: "Features", href: "/#features" },
+    { label: "Integrations", href: "/#integrations" },
+    { label: "Guide", href: "/guide" },
+    { label: "Pricing", href: "/#pricing" },
 ];
 
 export function LandingNav() {
