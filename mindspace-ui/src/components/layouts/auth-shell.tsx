@@ -1,34 +1,49 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/wordmark";
+import { AuthArt } from "./auth-art";
 
 interface Props {
     title: string;
     subtitle: string;
     footer: { prompt: string; href: string; cta: string };
+    artSide?: "left" | "right";
     children: React.ReactNode;
 }
 
-export function AuthShell({ title, subtitle, footer, children }: Props) {
+export function AuthShell({
+    title,
+    subtitle,
+    footer,
+    artSide = "right",
+    children,
+}: Props) {
     return (
-        <main className="min-h-screen calm-gradient">
-            <div className="grain min-h-screen">
-                <header className="px-6 sm:px-10 pt-8">
+        <main
+            className={`flex min-h-screen bg-[#FAFAF7] ${
+                artSide === "left" ? "lg:flex-row-reverse" : ""
+            }`}
+        >
+            <div className="relative flex w-full flex-col lg:w-[48%]">
+                <header className="px-6 pt-8 sm:px-12">
                     <Wordmark />
                 </header>
-                <section className="flex items-center justify-center px-6 py-16 sm:py-24">
-                    <div className="w-full max-w-md">
-                        <div className="text-center mb-8">
-                            <h1 className="text-[28px] sm:text-[32px] leading-tight tracking-tight text-ink font-medium">
-                                {title}
-                            </h1>
-                            <p className="mt-2 text-ink-muted text-[15px]">{subtitle}</p>
-                        </div>
-                        {children}
-                        <p className="mt-6 text-center text-sm text-ink-muted">
+
+                <section className="flex flex-1 items-center justify-center px-6 py-12 sm:px-12">
+                    <div className="w-full max-w-sm">
+                        <h1 className="text-[30px] font-bold leading-tight tracking-tight text-[#2F3441] sm:text-[34px]">
+                            {title}
+                        </h1>
+                        <p className="mt-2 text-[15px] leading-relaxed text-[#6B7280]">
+                            {subtitle}
+                        </p>
+
+                        <div className="mt-8">{children}</div>
+
+                        <p className="mt-7 text-sm text-[#6B7280]">
                             {footer.prompt}{" "}
                             <Link
                                 href={footer.href}
-                                className="text-indigo-soft hover:text-indigo-hover transition-colors"
+                                className="font-semibold text-[#6366F1] transition-colors duration-300 ease-calm hover:text-[#5457E0]"
                             >
                                 {footer.cta}
                             </Link>
@@ -36,6 +51,10 @@ export function AuthShell({ title, subtitle, footer, children }: Props) {
                     </div>
                 </section>
             </div>
+
+            <aside className="hidden lg:block lg:w-[52%]">
+                <AuthArt />
+            </aside>
         </main>
     );
 }
