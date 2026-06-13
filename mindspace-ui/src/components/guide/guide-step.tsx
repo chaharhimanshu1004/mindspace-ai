@@ -16,7 +16,7 @@ export function GuideStep({ n, title, children, last }: Props) {
                     <span className="mt-1 w-px flex-1 bg-gradient-to-b from-[#6366F1]/30 to-transparent" />
                 ) : null}
             </div>
-            <div className={last ? "pb-0" : "pb-8"}>
+            <div className={`min-w-0 flex-1 ${last ? "pb-0" : "pb-8"}`}>
                 <h4 className="text-[15px] font-semibold tracking-tight text-[#2F3441]">
                     {title}
                 </h4>

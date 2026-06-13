@@ -5,9 +5,10 @@ const groups = [
     {
         title: "Product",
         links: [
-            { label: "Features", href: "#features" },
-            { label: "Integrations", href: "#integrations" },
-            { label: "Pricing", href: "#pricing" },
+            { label: "Features", href: "/#features" },
+            { label: "Integrations", href: "/#integrations" },
+            { label: "Guide", href: "/guide" },
+            { label: "Pricing", href: "/#pricing" },
         ],
     },
     {
@@ -63,7 +64,7 @@ export function LandingFooter() {
             <div className="border-t border-border-softer">
                 <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 py-6 text-xs text-ink-subtle sm:flex-row sm:px-10">
                     <span>© 2026 MindSpace · made with care</span>
-                    <span>v0.1</span>
+                    <span>v1.0</span>
                 </div>
             </div>
         </footer>
