@@ -69,6 +69,25 @@ class StreamConsumer:
         message_id, fields = entries[0]
         return StreamMessage(message_id=message_id, fields=dict(fields))
 
+    async def autoclaim(
+        self, min_idle_ms: int, count: int, start: str = "0-0"
+    ) -> tuple[str, list[StreamMessage]]:
+        response = await redis.xautoclaim(
+            name=self._stream,
+            groupname=self._group,
+            consumername=self._consumer,
+            min_idle_time=min_idle_ms,
+            start_id=start,
+            count=count,
+        )
+        cursor = response[0]
+        entries = response[1] if len(response) > 1 else []
+        messages = [
+            StreamMessage(message_id=message_id, fields=dict(fields))
+            for message_id, fields in entries
+        ]
+        return cursor, messages
+
     async def ack(self, message_id: str) -> None:
         await redis.xack(self._stream, self._group, message_id)
 

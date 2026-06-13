@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { AuthShell } from "@/components/layouts/auth-shell";
 import { SignupForm } from "@/features/auth/components/signup-form";
 
@@ -13,9 +12,7 @@ export default function SignupPage() {
                 cta: "Log in",
             }}
         >
-            <Card>
-                <SignupForm />
-            </Card>
+            <SignupForm />
         </AuthShell>
     );
 }

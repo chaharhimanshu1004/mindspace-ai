@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { AuthShell } from "@/components/layouts/auth-shell";
 import { LoginForm } from "@/features/auth/components/login-form";
 
@@ -7,15 +6,14 @@ export default function LoginPage() {
         <AuthShell
             title="Welcome back"
             subtitle="Step back into your quiet space."
+            artSide="left"
             footer={{
                 prompt: "New here?",
                 href: "/signup",
                 cta: "Create an account",
             }}
         >
-            <Card>
-                <LoginForm />
-            </Card>
+            <LoginForm />
         </AuthShell>
     );
 }

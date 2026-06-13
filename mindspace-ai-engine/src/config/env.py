@@ -32,6 +32,10 @@ class Env(BaseSettings):
     MAX_DELIVERIES: int = Field(default=5, gt=0)
     STAGE_TIMEOUT_SECONDS: int = Field(default=90, gt=0)
 
+    PEL_RECOVERY_INTERVAL_SECONDS: int = Field(default=300, gt=0)
+    PEL_RECOVERY_MIN_IDLE_SECONDS: int = Field(default=120, gt=0)
+    PEL_RECOVERY_BATCH_SIZE: int = Field(default=50, gt=0)
+
     ENTITY_DEDUP_COSINE: float = Field(default=0.85, ge=0.0, le=1.0)
 
     INTERNAL_API_TOKEN: str
