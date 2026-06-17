@@ -13,8 +13,8 @@ const labelMap: Record<string, string> = {
 const toneMap: Record<string, string> = {
     pending: "bg-indigo-tint text-indigo-soft border-indigo-soft/20",
     embedded: "bg-indigo-tint text-indigo-soft border-indigo-soft/20",
-    enriched: "bg-sage-tint text-ink-muted border-sage/20",
-    linked: "bg-sage-tint text-ink-muted border-sage/30",
+    enriched: "bg-gradient-to-r from-[#818CF8] to-[#6366F1] text-white border-transparent",
+    linked: "bg-indigo-tint text-indigo-soft border-indigo-soft/20",
     failed: "bg-rose-50 text-rose-500 border-rose-200",
 };
 

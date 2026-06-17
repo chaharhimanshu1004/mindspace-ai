@@ -12,10 +12,10 @@ export function MemorySourceFilter({ value, onChange }: Props) {
 
     const btnClass = (active: boolean) =>
         [
-            "px-3 py-1.5 rounded-full text-[12px] font-medium transition-all duration-200",
+            "px-4 py-1.5 rounded-full text-[12px] font-semibold transition-all duration-300 ease-calm",
             active
-                ? "bg-ink text-canvas"
-                : "bg-ink/6 text-ink-muted hover:bg-ink/10 hover:text-ink",
+                ? "bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white shadow-soft"
+                : "border border-[#E9E8E2] bg-white/70 text-[#6B7280] backdrop-blur hover:border-[#6366F1]/30 hover:text-[#2F3441]",
         ].join(" ");
 
     return (

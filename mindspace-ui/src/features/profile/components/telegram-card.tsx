@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { TelegramIcon } from "@/components/landing/icons/telegram-icon";
 
 interface Props {
     connected: boolean;
@@ -14,44 +15,32 @@ export function TelegramCard({ connected, loading, disconnecting, onConnect, onD
     return (
         <article
             className={[
-                "bg-[#F9F9F5] border border-ink/8 rounded-2xl",
+                "bg-white border border-[#E9E8E2] rounded-2xl",
                 "p-5 flex flex-col gap-4",
                 "transition-all duration-300 ease-calm",
-                "hover:border-ink/12 hover:shadow-soft",
+                "hover:border-[#6366F1]/20 hover:shadow-soft",
             ].join(" ")}
         >
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <div
                     className={[
-                        "w-12 h-12 shrink-0 rounded-xl",
-                        "bg-[#229ED9]/10 border border-[#229ED9]/25",
+                        "w-12 h-12 shrink-0 rounded-xl overflow-hidden",
+                        "bg-white border border-[#E9E8E2] shadow-soft",
                         "flex items-center justify-center",
                     ].join(" ")}
                     aria-hidden
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="w-6 h-6 text-[#229ED9]"
-                    >
-                        <path d="m22 2-7 20-4-9-9-4Z" />
-                        <path d="M22 2 11 13" />
-                    </svg>
+                    <TelegramIcon className="w-7 h-7" />
                 </div>
 
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                        <h4 className="text-ink text-[14px] font-medium">Telegram Bot</h4>
+                        <h4 className="text-[#2F3441] text-[14px] font-semibold tracking-tight">Telegram Bot</h4>
                         {loading ? (
                             <span className="text-[11px] text-ink-subtle">Checking…</span>
                         ) : connected ? (
-                            <span className="inline-flex items-center gap-1 text-[11px] text-sage bg-sage/10 border border-sage/25 rounded-full px-2 py-0.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-sage" />
+                            <span className="inline-flex items-center gap-1 text-[11px] text-indigo-soft bg-indigo-tint border border-indigo-soft/25 rounded-full px-2 py-0.5 font-medium">
+                                <span className="w-1.5 h-1.5 rounded-full bg-indigo-soft" />
                                 Connected
                             </span>
                         ) : (

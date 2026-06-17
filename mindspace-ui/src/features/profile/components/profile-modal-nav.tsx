@@ -15,15 +15,15 @@ export function ProfileModalNav({ active, onChange, onSignOut }: Props) {
         <nav
             className={[
                 "shrink-0",
-                "border-b sm:border-b-0 sm:border-r border-ink/8",
-                "bg-[#ECEAE5]/60",
+                "border-b sm:border-b-0 sm:border-r border-[#E9E8E2]",
+                "bg-white/50",
                 "px-3 sm:px-3 py-3 sm:py-5",
                 "sm:w-52",
                 "overflow-x-auto sm:overflow-y-auto",
                 "flex flex-col",
             ].join(" ")}
         >
-            <span className="hidden sm:block text-[10px] tracking-[0.18em] uppercase text-ink-subtle px-3 mb-3">
+            <span className="hidden sm:block text-[10px] tracking-[0.18em] uppercase text-[#2F3441] px-3 mb-3 font-bold">
                 Settings
             </span>
             <ul className="flex sm:flex-col gap-1">
@@ -35,16 +35,16 @@ export function ProfileModalNav({ active, onChange, onSignOut }: Props) {
                                 type="button"
                                 onClick={() => onChange(s.id)}
                                 className={[
-                                    "w-full text-left px-3 py-2 rounded-lg text-sm",
+                                    "w-full text-left px-3 py-2 rounded-xl text-sm font-bold",
                                     "flex items-center gap-2.5",
-                                    "transition-all duration-200 ease-calm",
+                                    "transition-all duration-300 ease-calm",
                                     "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-soft/40",
                                     isActive
-                                        ? "bg-ink/[0.12] text-ink font-medium shadow-[inset_0_0_0_1px_rgba(47,52,65,0.08)]"
-                                        : "text-ink-muted hover:text-ink hover:bg-ink/4",
+                                        ? "bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white shadow-soft"
+                                        : "text-[#2F3441] hover:bg-[#2F3441]/5",
                                 ].join(" ")}
                             >
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
                                     <path d={s.icon} />
                                 </svg>
                                 {s.label}
@@ -54,19 +54,19 @@ export function ProfileModalNav({ active, onChange, onSignOut }: Props) {
                 })}
             </ul>
 
-            <div className="hidden sm:block mt-auto pt-3 border-t border-ink/8">
+            <div className="hidden sm:block mt-auto pt-3 border-t border-[#E9E8E2]">
                 <button
                     type="button"
                     onClick={onSignOut}
                     className={[
-                        "w-full text-left px-3 py-2 rounded-lg text-sm font-semibold",
+                        "w-full text-left px-3 py-2 rounded-xl text-sm font-semibold",
                         "flex items-center gap-2.5",
-                        "text-red-400 hover:text-red-500 hover:bg-ink/4",
+                        "text-rose-500 hover:bg-rose-50",
                         "transition-all duration-200 ease-calm",
                         "focus:outline-none focus-visible:ring-2 focus-visible:ring-red-300/40",
                     ].join(" ")}
                 >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
                         <path d={SIGNOUT_ICON} />
                     </svg>
                     Sign out

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 interface Props {
     open: boolean;
@@ -11,6 +12,11 @@ interface Props {
 
 export function Modal({ open, onClose, children, labelledBy }: Props) {
     const panelRef = useRef<HTMLDivElement>(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         if (!open) return;
@@ -29,9 +35,9 @@ export function Modal({ open, onClose, children, labelledBy }: Props) {
         };
     }, [open, onClose]);
 
-    if (!open) return null;
+    if (!open || !mounted) return null;
 
-    return (
+    return createPortal(
         <div
             role="dialog"
             aria-modal="true"
@@ -63,11 +69,12 @@ export function Modal({ open, onClose, children, labelledBy }: Props) {
                     "border-0 sm:border sm:border-ink/10",
                     "shadow-[0_24px_80px_-20px_rgba(47,52,65,0.35)]",
                     "flex flex-col",
-                    "bg-[#F5F5F2]",
+                    "bg-[#FAFAF7]",
                 ].join(" ")}
             >
                 {children}
             </div>
-        </div>
+        </div>,
+        document.body,
     );
 }

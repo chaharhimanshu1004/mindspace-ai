@@ -24,7 +24,7 @@ export function IntegrationsSection() {
 
     return (
         <div>
-            <h3 className="text-[15px] font-medium text-ink tracking-tight">
+            <h3 className="text-[16px] font-bold tracking-tight text-[#2F3441]">
                 Integrations
             </h3>
             <p className="mt-1 text-[13px] text-ink-muted">
