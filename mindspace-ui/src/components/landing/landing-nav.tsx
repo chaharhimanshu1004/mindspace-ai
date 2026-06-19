@@ -1,12 +1,8 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { NavActions } from "./nav-actions";
-
-const links = [
-    { label: "Features", href: "#features" },
-    { label: "Integrations", href: "#integrations" },
-    { label: "Pricing", href: "#pricing" },
-];
+import { NavMobileMenu } from "./nav-mobile-menu";
+import { navLinks } from "./nav-links";
 
 export function LandingNav() {
     return (
@@ -15,7 +11,7 @@ export function LandingNav() {
                 <BrandMark href="/" />
 
                 <nav className="hidden items-center gap-1 md:flex">
-                    {links.map((link) => (
+                    {navLinks.map((link) => (
                         <Link
                             key={link.href}
                             href={link.href}
@@ -26,7 +22,10 @@ export function LandingNav() {
                     ))}
                 </nav>
 
-                <NavActions />
+                <div className="flex items-center gap-2">
+                    <NavActions />
+                    <NavMobileMenu />
+                </div>
             </div>
         </header>
     );

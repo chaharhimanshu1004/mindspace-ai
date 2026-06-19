@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Wordmark } from "@/components/brand/wordmark";
+import { BrandMark } from "@/components/brand/brand-mark";
 import { AuthArt } from "./auth-art";
 
 interface Props {
@@ -25,7 +25,7 @@ export function AuthShell({
         >
             <div className="relative flex w-full flex-col lg:w-[48%]">
                 <header className="px-6 pt-8 sm:px-12">
-                    <Wordmark />
+                    <BrandMark href="/" />
                 </header>
 
                 <section className="flex flex-1 items-center justify-center px-6 py-12 sm:px-12">

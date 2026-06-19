@@ -8,4 +8,6 @@ export const useMemories = (sourceType?: string) =>
     useQuery({
         queryKey: memoryKeys.list(sourceType),
         queryFn: () => listMemoriesApi({ limit: 50, sourceType }),
+        refetchInterval: 5000,
+        refetchIntervalInBackground: false,
     });
