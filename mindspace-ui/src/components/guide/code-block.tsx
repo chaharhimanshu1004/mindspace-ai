@@ -50,7 +50,7 @@ export function CodeBlock({ code, label }: Props) {
                     )}
                 </button>
             </div>
-            <pre className="overflow-x-auto px-4 py-4">
+            <pre className="code-selection overflow-x-auto px-4 py-4">
                 <code className="font-mono text-[12.5px] leading-relaxed text-white/85 whitespace-pre">
                     {code}
                 </code>
