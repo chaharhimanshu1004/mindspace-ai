@@ -32,7 +32,7 @@ export function ProfileButton() {
                     "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-soft/40 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
                 ].join(" ")}
             >
-                {initialsOf(user?.name)}
+                {initialsOf(user?.name ?? undefined)}
             </button>
 
             <ProfileModal open={open} onClose={() => setOpen(false)} />

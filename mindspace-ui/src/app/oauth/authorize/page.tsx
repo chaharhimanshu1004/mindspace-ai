@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAuth } from "@/features/auth/use-auth";
 import { Wordmark } from "@/components/brand/wordmark";
@@ -11,7 +12,7 @@ const SCOPE_LABELS: Record<string, string> = {
     "memories:write": "Save new memories on your behalf",
 };
 
-export default function OAuthAuthorizePage() {
+function OAuthAuthorizeContent() {
     const params = useSearchParams();
     const router = useRouter();
     const { user, ready } = useAuth();
@@ -105,5 +106,13 @@ export default function OAuthAuthorizePage() {
                 </div>
             </div>
         </main>
+    );
+}
+
+export default function OAuthAuthorizePage() {
+    return (
+        <Suspense>
+            <OAuthAuthorizeContent />
+        </Suspense>
     );
 }

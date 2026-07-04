@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { useMemories } from "@/features/memories/hooks/use-memories";
@@ -12,9 +12,7 @@ import { MemoryComposer } from "@/features/memories/components/memory-composer";
 import { MemorySourceFilter } from "@/features/memories/components/memory-source-filter";
 import { LandingBackground } from "@/components/landing/landing-background";
 
-export default function MemoriesPage() {
-    const [sourceType, setSourceType] = useState<string | undefined>("user_text");
-    const { data, isLoading, isError } = useMemories(sourceType);
+function IntegrationToastHandler() {
     const searchParams = useSearchParams();
 
     useEffect(() => {
@@ -30,10 +28,20 @@ export default function MemoriesPage() {
         }
     }, [searchParams]);
 
+    return null;
+}
+
+export default function MemoriesPage() {
+    const [sourceType, setSourceType] = useState<string | undefined>("user_text");
+    const { data, isLoading, isError } = useMemories(sourceType);
+
     const memories = data?.items ?? [];
 
     return (
         <main className="relative min-h-screen bg-[#FAFAF7]">
+            <Suspense>
+                <IntegrationToastHandler />
+            </Suspense>
             <LandingBackground />
             <div className="min-h-screen pb-40">
                 <AppHeader />

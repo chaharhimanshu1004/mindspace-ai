@@ -51,7 +51,7 @@ export function ProfileSection() {
                     ].join(" ")}
                     aria-hidden
                 >
-                    {initialsOf(user?.name)}
+                    {initialsOf(user?.name ?? undefined)}
                 </div>
                 <div className="min-w-0">
                     <p className="text-ink font-medium text-[15px] leading-tight truncate">
