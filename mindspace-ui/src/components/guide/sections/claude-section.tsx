@@ -4,13 +4,13 @@ import { CodeBlock } from "../code-block";
 import { IntegrationHeader } from "../integration-header";
 import { AnthropicIcon } from "@/components/landing/icons/anthropic-icon";
 
-const addCommand = `claude mcp add --transport http mindspace https://api.mindspace.ai/mcp`;
+const addCommand = `claude mcp add --transport http mindspace https://api.mindspaceai.online/mcp`;
 
 const jsonConfig = `{
   "mcpServers": {
     "mindspace": {
       "type": "http",
-      "url": "https://api.mindspace.ai/mcp"
+      "url": "https://api.mindspaceai.online/mcp"
     }
   }
 }`;
