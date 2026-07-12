@@ -33,6 +33,7 @@ export const envSchema = z.object({
     GOOGLE_CLIENT_ID: z.string().min(1),
     GOOGLE_CLIENT_SECRET: z.string().min(1),
     GOOGLE_REDIRECT_URI: z.string().url(),
+    GOOGLE_SIGNIN_REDIRECT_URI: z.string().url(),
 
     SLACK_CLIENT_ID: z.string().min(1),
     SLACK_CLIENT_SECRET: z.string().min(1),
@@ -46,6 +47,12 @@ export const envSchema = z.object({
 
     RATE_LIMIT_MAX: z.coerce.number().int().positive().default(5),
     RATE_LIMIT_WINDOW_SEC: z.coerce.number().int().positive().default(60),
+
+    SMTP_HOST: z.string().default("smtp.gmail.com"),
+    SMTP_PORT: z.coerce.number().default(587),
+    SMTP_USER: z.string().min(1),
+    SMTP_PASS: z.string().min(1),
+    SMTP_FROM: z.string().min(1),
 });
 
 export type Env = z.infer<typeof envSchema>;

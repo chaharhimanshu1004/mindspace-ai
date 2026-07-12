@@ -9,10 +9,31 @@ export class AuthModel {
         return prisma.user.findUnique({ where: { id } });
     }
 
+    public static async findByGoogleId(googleId: string) {
+        return prisma.user.findUnique({ where: { googleId } });
+    }
+
     public static async createUser(args: { email: string; passwordHash: string }) {
-        const name = args.email.split("@")[0]; // users by default name is their prefix of email
+        const name = args.email.split("@")[0];
         return prisma.user.create({
             data: { email: args.email, password: args.passwordHash, name },
+        });
+    }
+
+    public static async createGoogleUser(args: { email: string; googleId: string; name: string | null }) {
+        return prisma.user.create({
+            data: {
+                email: args.email,
+                googleId: args.googleId,
+                name: args.name ?? args.email.split("@")[0],
+            },
+        });
+    }
+
+    public static async linkGoogleId(args: { userId: number; googleId: string }) {
+        return prisma.user.update({
+            where: { id: args.userId },
+            data: { googleId: args.googleId },
         });
     }
 

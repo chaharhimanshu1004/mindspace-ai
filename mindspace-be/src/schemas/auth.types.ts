@@ -23,3 +23,15 @@ export interface AuthContext {
     tokenId: number;
     scopes?: string[];
 }
+
+export interface OtpPending {
+    tempToken: string;
+    email: string;
+}
+
+export interface GoogleUserInfo {
+    id: string;
+    email: string;
+    name: string | null;
+    picture: string | null;
+}

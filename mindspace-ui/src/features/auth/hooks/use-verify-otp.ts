@@ -4,18 +4,21 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-import { signupApi } from "../api/signup.api";
+import { verifyOtpApi } from "../api/verify-otp.api";
+import { useAuth } from "../use-auth";
 import { ApiError } from "@/lib/api-error";
 
-export const useSignup = () => {
+export const useVerifyOtp = () => {
     const router = useRouter();
+    const { setUser } = useAuth();
 
     return useMutation({
-        mutationFn: (args: { email: string; password: string }) => signupApi(args),
-        onSuccess: (pending) => {
-            sessionStorage.setItem("otp_temp_token", pending.tempToken);
-            sessionStorage.setItem("otp_email", pending.email);
-            router.push("/verify-otp");
+        mutationFn: (args: { tempToken: string; otp: string }) => verifyOtpApi(args),
+        onSuccess: (session) => {
+            sessionStorage.removeItem("otp_temp_token");
+            sessionStorage.removeItem("otp_email");
+            setUser(session.user);
+            router.push("/memories");
         },
         onError: (error) => {
             const message =
