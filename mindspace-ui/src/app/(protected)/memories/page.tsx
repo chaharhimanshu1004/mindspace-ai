@@ -11,6 +11,9 @@ import { MemorySkeletonGrid } from "@/features/memories/components/memory-skelet
 import { MemoryComposer } from "@/features/memories/components/memory-composer";
 import { MemorySourceFilter } from "@/features/memories/components/memory-source-filter";
 import { LandingBackground } from "@/components/landing/landing-background";
+import { SlackChannelPicker } from "@/features/profile/components/slack-channel-picker";
+import { useIntegrations } from "@/features/profile/hooks/use-integrations";
+import { useSlackSubscriptions } from "@/features/profile/hooks/use-slack-subscriptions";
 
 function IntegrationToastHandler() {
     const searchParams = useSearchParams();
@@ -33,9 +36,21 @@ function IntegrationToastHandler() {
 
 export default function MemoriesPage() {
     const [sourceType, setSourceType] = useState<string | undefined>("user_text");
+    const [slackPickerOpen, setSlackPickerOpen] = useState(false);
+
     const { data, isLoading, isError } = useMemories(sourceType);
+    const { slackConnected, connectSlack } = useIntegrations();
+    const { data: slackSubs } = useSlackSubscriptions(slackConnected && sourceType === "slack");
 
     const memories = data?.items ?? [];
+
+    const isSlackTab = sourceType === "slack";
+    const slackContext = isSlackTab ? {
+        connected: slackConnected,
+        hasSubscriptions: (slackSubs?.length ?? 0) > 0,
+        onConnect: connectSlack,
+        onOpenPicker: () => setSlackPickerOpen(true),
+    } : undefined;
 
     return (
         <main className="relative min-h-screen bg-[#FAFAF7]">
@@ -77,7 +92,7 @@ export default function MemoriesPage() {
                             Couldn&rsquo;t load your memories — try refreshing.
                         </div>
                     ) : memories.length === 0 ? (
-                        <MemoryEmpty />
+                        <MemoryEmpty slackContext={slackContext} />
                     ) : (
                         <MemoryGrid memories={memories} />
                     )}
@@ -85,6 +100,7 @@ export default function MemoriesPage() {
             </div>
 
             <MemoryComposer disabled={!!sourceType && sourceType !== "user_text"} disabledSource={sourceType} />
+            <SlackChannelPicker open={slackPickerOpen} onClose={() => setSlackPickerOpen(false)} />
         </main>
     );
 }

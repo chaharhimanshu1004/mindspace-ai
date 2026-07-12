@@ -73,12 +73,31 @@ export function SlackCard({ connected, loading, disconnecting, onConnect, onDisc
                     </div>
                 </div>
 
-                {connected ? (
+                {connected && subCount === 0 ? (
+                    <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+                        <p className="text-[13px] font-semibold text-amber-800">
+                            One more step — subscribe to channels
+                        </p>
+                        <p className="mt-1 text-[12px] text-amber-700 leading-relaxed">
+                            Slack is connected but no channels are selected yet. MindSpace won&rsquo;t sync anything until you pick at least one channel.
+                        </p>
+                        <button
+                            type="button"
+                            onClick={() => setPickerOpen(true)}
+                            className={[
+                                "mt-3 w-full rounded-lg py-2 text-[13px] font-semibold",
+                                "bg-amber-500 text-white",
+                                "hover:bg-amber-600 active:bg-amber-700",
+                                "transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400",
+                            ].join(" ")}
+                        >
+                            Select channels to sync →
+                        </button>
+                    </div>
+                ) : connected ? (
                     <div className="flex items-center justify-between pt-3 border-t border-[#F1F0EB]">
                         <span className="text-[12px] text-ink-muted">
-                            {subCount === 0
-                                ? "No channels selected yet"
-                                : `${subCount} channel${subCount === 1 ? "" : "s"} subscribed`}
+                            {`${subCount} channel${subCount === 1 ? "" : "s"} subscribed`}
                         </span>
                         <button
                             type="button"
@@ -90,7 +109,7 @@ export function SlackCard({ connected, loading, disconnecting, onConnect, onDisc
                                 "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-soft/30",
                             ].join(" ")}
                         >
-                            Choose channels
+                            Manage channels
                         </button>
                     </div>
                 ) : null}
