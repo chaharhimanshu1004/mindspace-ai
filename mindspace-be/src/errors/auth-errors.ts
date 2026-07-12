@@ -27,3 +27,31 @@ export const sessionRevokedError = (): AppError =>
         status: 401,
         code: "SESSION_REVOKED",
     });
+
+export const otpExpiredError = (): AppError =>
+    new AppError({
+        message: "Verification code has expired. Please request a new one.",
+        status: 400,
+        code: "OTP_EXPIRED",
+    });
+
+export const invalidOtpError = (): AppError =>
+    new AppError({
+        message: "Invalid verification code.",
+        status: 400,
+        code: "INVALID_OTP",
+    });
+
+export const googleAuthError = (): AppError =>
+    new AppError({
+        message: "Google authentication failed. Please try again.",
+        status: 502,
+        code: "GOOGLE_AUTH_ERROR",
+    });
+
+export const invalidStateError = (): AppError =>
+    new AppError({
+        message: "Invalid or expired auth state. Please try again.",
+        status: 400,
+        code: "INVALID_STATE",
+    });

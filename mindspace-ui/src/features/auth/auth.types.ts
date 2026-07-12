@@ -10,3 +10,8 @@ export interface AuthSession {
     expiresAt: string;
     user: PublicUser;
 }
+
+export interface OtpPending {
+    tempToken: string;
+    email: string;
+}
