@@ -1,48 +1,21 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/brand/brand-mark";
-
-const groups = [
-    {
-        title: "Product",
-        links: [
-            { label: "Features", href: "/#features" },
-            { label: "Integrations", href: "/#integrations" },
-            { label: "Guide", href: "/guide" },
-            { label: "Pricing", href: "/#pricing" },
-        ],
-    },
-    {
-        title: "Capture",
-        links: [
-            { label: "Claude Code", href: "#integrations" },
-            { label: "Slack", href: "#integrations" },
-            { label: "Telegram", href: "#integrations" },
-        ],
-    },
-    {
-        title: "Company",
-        links: [
-            { label: "Sign in", href: "/login" },
-            { label: "Get started", href: "/signup" },
-        ],
-    },
-];
+import { footerGroups } from "./footer.data";
 
 export function LandingFooter() {
     return (
-        <footer className="border-t border-border-subtle">
-            <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-6 py-14 sm:px-10 md:grid-cols-4">
-                <div className="col-span-2 md:col-span-1">
+        <footer className="border-t border-border-subtle bg-surface-1">
+            <div className="mx-auto grid max-w-content grid-cols-2 gap-10 px-11 py-14 sm:px-16 lg:px-20 lg:grid-cols-4">
+                <div className="col-span-2 lg:col-span-1">
                     <BrandMark href="/" />
-                    <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-muted">
-                        A continuous second brain that captures, embeds, and
-                        connects everything you think.
+                    <p className="mt-4 max-w-[34ch] text-body-sm text-ink-muted">
+                        Captured, embedded, handed back when you ask.
                     </p>
                 </div>
 
-                {groups.map((group) => (
-                    <div key={group.title}>
-                        <h4 className="text-xs uppercase tracking-[0.16em] text-ink-subtle">
+                {footerGroups.map((group) => (
+                    <nav key={group.title} aria-label={group.title}>
+                        <h4 className="text-overline font-semibold uppercase text-ink-subtle">
                             {group.title}
                         </h4>
                         <ul className="mt-4 space-y-2.5">
@@ -50,21 +23,21 @@ export function LandingFooter() {
                                 <li key={link.label}>
                                     <Link
                                         href={link.href}
-                                        className="text-sm text-ink-muted transition-colors duration-300 ease-calm hover:text-ink"
+                                        className="rounded-control text-body-sm text-ink-muted transition-colors duration-fast ease-standard hover:text-ink focus:outline-none focus-visible:shadow-ring"
                                     >
                                         {link.label}
                                     </Link>
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </nav>
                 ))}
             </div>
 
-            <div className="border-t border-border-softer">
-                <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 py-6 text-xs text-ink-subtle sm:flex-row sm:px-10">
-                    <span>© 2026 MindSpace · made with care</span>
-                    <span>v1.0</span>
+            <div className="border-t border-border-subtle">
+                <div className="mx-auto flex max-w-content flex-col items-center justify-between gap-2 px-11 py-6 text-meta text-ink-subtle sm:flex-row sm:px-16 lg:px-20">
+                    <span>© 2026 MindSpace AI</span>
+                    <span className="font-mono tnum">v1.0</span>
                 </div>
             </div>
         </footer>

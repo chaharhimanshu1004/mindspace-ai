@@ -54,22 +54,22 @@ export function MemoryModal({ memory, onClose }: Props) {
                 className={[
                     "relative w-full max-w-2xl",
                     "max-h-[85vh] flex flex-col",
-                    "bg-[#F5F5F2] rounded-3xl overflow-hidden",
+                    "bg-[#F5F5F2] rounded-card overflow-hidden",
                     "border border-ink/10",
-                    "shadow-[0_24px_80px_-20px_rgba(47,52,65,0.35)]",
+                    "shadow-[0_24px_80px_-20px_rgba(36,35,31,0.35)]",
                 ].join(" ")}
             >
                 <header className="flex items-start justify-between gap-4 px-6 pt-6 pb-4 shrink-0">
                     <div className="flex-1 min-w-0">
                         <div className="flex items-baseline gap-2 flex-wrap">
-                            <span className="text-[15px] font-semibold text-ink shrink-0">Topic:</span>
-                            <h2 className="text-ink font-medium text-[15px] leading-snug tracking-tight">
+                            <span className="text-body font-semibold text-ink shrink-0">Topic:</span>
+                            <h2 className="text-ink font-medium text-body leading-snug tracking-tight">
                                 {memory.title ?? "Untitled thought"}
                             </h2>
                         </div>
                         {isEnriched && memory.topics.length > 0 && (
                             <div className="mt-1.5 flex items-center gap-2 flex-wrap">
-                                <span className="text-[15px] font-semibold text-ink shrink-0">Tags:</span>
+                                <span className="text-body font-semibold text-ink shrink-0">Tags:</span>
                                 <div className="flex flex-wrap gap-1.5">
                                     {memory.topics.map((t) => (
                                         <span
@@ -96,7 +96,7 @@ export function MemoryModal({ memory, onClose }: Props) {
                 </header>
 
                 <div className="flex-1 overflow-y-auto px-6 pb-2">
-                    <p className="text-ink-muted text-[14px] leading-relaxed whitespace-pre-wrap">
+                    <p className="text-ink-muted text-body-sm leading-relaxed whitespace-pre-wrap">
                         {memory.content}
                     </p>
                 </div>

@@ -6,7 +6,7 @@ import { LandingBackground } from "@/components/landing/landing-background";
 
 export default function AskPage() {
     return (
-        <main className="relative flex h-screen flex-col bg-[#FAFAF7]">
+        <main className="relative flex h-svh flex-col">
             <LandingBackground />
             <AppHeader />
             <div className="min-h-0 flex-1">

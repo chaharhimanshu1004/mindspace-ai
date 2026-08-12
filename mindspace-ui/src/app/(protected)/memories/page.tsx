@@ -11,6 +11,7 @@ import { MemorySkeletonGrid } from "@/features/memories/components/memory-skelet
 import { MemoryComposer } from "@/features/memories/components/memory-composer";
 import { MemorySourceFilter } from "@/features/memories/components/memory-source-filter";
 import { LandingBackground } from "@/components/landing/landing-background";
+import { Overline } from "@/components/ui/overline";
 import { SlackChannelPicker } from "@/features/profile/components/slack-channel-picker";
 import { useIntegrations } from "@/features/profile/hooks/use-integrations";
 import { useSlackSubscriptions } from "@/features/profile/hooks/use-slack-subscriptions";
@@ -39,21 +40,29 @@ export default function MemoriesPage() {
     const [slackPickerOpen, setSlackPickerOpen] = useState(false);
 
     const { data, isLoading, isError } = useMemories(sourceType);
-    const { slackConnected, connectSlack } = useIntegrations();
+    const { slackConnected, connectSlack, telegramConnected, connectTelegram } =
+        useIntegrations();
     const { data: slackSubs } = useSlackSubscriptions(slackConnected && sourceType === "slack");
 
     const memories = data?.items ?? [];
 
     const isSlackTab = sourceType === "slack";
-    const slackContext = isSlackTab ? {
-        connected: slackConnected,
-        hasSubscriptions: (slackSubs?.length ?? 0) > 0,
-        onConnect: connectSlack,
-        onOpenPicker: () => setSlackPickerOpen(true),
-    } : undefined;
+    const slackEmpty = isSlackTab
+        ? {
+              connected: slackConnected,
+              hasSubscriptions: (slackSubs?.length ?? 0) > 0,
+              onConnect: connectSlack,
+              onOpenPicker: () => setSlackPickerOpen(true),
+          }
+        : undefined;
+
+    const telegramEmpty =
+        sourceType === "telegram"
+            ? { connected: telegramConnected, onConnect: connectTelegram }
+            : undefined;
 
     return (
-        <main className="relative min-h-screen bg-[#FAFAF7]">
+        <main className="relative min-h-screen">
             <Suspense>
                 <IntegrationToastHandler />
             </Suspense>
@@ -61,41 +70,42 @@ export default function MemoriesPage() {
             <div className="min-h-screen pb-40">
                 <AppHeader />
 
-                <section className="px-6 sm:px-10 pt-10 sm:pt-14 max-w-6xl mx-auto">
-                    <div className="flex items-end justify-between gap-4 mb-5 sm:mb-6">
-                        <div>
-                            <span className="inline-flex items-center gap-2 rounded-full border border-[#6366F1]/15 bg-gradient-to-r from-[#EEF0FF] to-[#F5F3FF] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] shadow-soft">
-                                <span className="h-1.5 w-1.5 rounded-full bg-[#6366F1] shadow-[0_0_10px_rgba(99,102,241,0.7)]" />
-                                <span className="bg-gradient-to-r from-[#6366F1] to-[#818CF8] bg-clip-text text-transparent">
-                                    memories
+                <section className="mx-auto max-w-content px-6 pb-16 pt-10 sm:px-10 sm:pt-14">
+                    <div className="flex flex-col gap-6 border-b border-border-subtle pb-6">
+                        <div className="flex flex-wrap items-end justify-between gap-4">
+                            <div>
+                                <Overline>memories</Overline>
+                                <h1 className="ink-weight mt-4 font-display text-[26px] leading-[1.14] tracking-[-0.015em] text-ink sm:text-display-md">
+                                    Everything you kept
+                                </h1>
+                            </div>
+                            {memories.length > 0 && (
+                                <span className="tnum font-mono text-[13px] text-ink-subtle">
+                                    {memories.length} saved
                                 </span>
-                            </span>
-                            <h1 className="mt-3 text-[28px] sm:text-[36px] font-bold leading-tight tracking-tight text-[#2F3441]">
-                                Your quiet garden of thoughts
-                            </h1>
+                            )}
                         </div>
-                        {memories.length > 0 && (
-                            <span className="hidden sm:inline-flex items-center rounded-full border border-[#E9E8E2] bg-white px-3 py-1 text-xs font-semibold text-[#6B7280] shadow-soft">
-                                {memories.length} saved
-                            </span>
-                        )}
-                    </div>
 
-                    <div className="mb-6">
                         <MemorySourceFilter value={sourceType} onChange={setSourceType} />
                     </div>
 
-                    {isLoading ? (
-                        <MemorySkeletonGrid />
-                    ) : isError ? (
-                        <div className="text-center py-20 text-ink-muted text-sm">
-                            Couldn&rsquo;t load your memories — try refreshing.
-                        </div>
-                    ) : memories.length === 0 ? (
-                        <MemoryEmpty slackContext={slackContext} />
-                    ) : (
-                        <MemoryGrid memories={memories} />
-                    )}
+                    <div className="mt-8">
+                        {isLoading ? (
+                            <MemorySkeletonGrid />
+                        ) : isError ? (
+                            <div className="rounded-card border border-border-subtle bg-surface-1 p-8 text-center text-body-sm text-ink-muted">
+                                Couldn&rsquo;t load your memories — try refreshing.
+                            </div>
+                        ) : memories.length === 0 ? (
+                            <MemoryEmpty
+                                sourceType={sourceType}
+                                slack={slackEmpty}
+                                telegram={telegramEmpty}
+                            />
+                        ) : (
+                            <MemoryGrid memories={memories} />
+                        )}
+                    </div>
                 </section>
             </div>
 

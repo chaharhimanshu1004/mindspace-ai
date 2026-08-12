@@ -17,90 +17,92 @@ export function MemoryCard({ memory }: Props) {
     const [open, setOpen] = useState(false);
     const [confirming, setConfirming] = useState(false);
     const deleteMutation = useDeleteMemory();
-    const isPending = memory.status === "pending";
-
-    const handleDelete = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        deleteMutation.mutate(memory.id, {
-            onSuccess: () => setConfirming(false),
-        });
-    };
 
     return (
         <>
-            <article
-                role="button"
-                tabIndex={0}
-                onClick={() => setOpen(true)}
-                onKeyDown={(e) => e.key === "Enter" && setOpen(true)}
-                className={[
-                    "group bg-white/80 backdrop-blur-sm cursor-pointer",
-                    "border border-border-subtle rounded-3xl shadow-soft",
-                    "p-5 sm:p-6 flex flex-col gap-3",
-                    "transition-all duration-300 ease-calm",
-                    "hover:-translate-y-0.5 hover:shadow-lift hover:border-[#6366F1]/20",
-                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-soft/40",
-                    isPending ? "opacity-70" : "opacity-100",
-                ].join(" ")}
-            >
+            <article className="group flex flex-col gap-3 rounded-card border border-border-subtle bg-surface-1 p-5 shadow-card transition-[box-shadow,border-color,transform] duration-base ease-standard hover:-translate-y-px hover:border-border-strong hover:shadow-card-hover">
                 <header className="flex items-start justify-between gap-3">
-                    <h3 className="text-[15px] font-semibold leading-snug tracking-tight text-[#2F3441] line-clamp-2">
-                        {memory.title ?? "Untitled thought"}
-                    </h3>
                     <MemoryStatusBadge status={memory.status} />
+                    <time
+                        dateTime={memory.createdAt}
+                        title={formatIst(memory.createdAt)}
+                        className="tnum shrink-0 font-mono text-[12px] text-ink-subtle"
+                    >
+                        {relativeTime(memory.createdAt)}
+                    </time>
                 </header>
 
-                <p className="text-ink-muted text-sm leading-relaxed whitespace-pre-wrap line-clamp-6">
+                <button
+                    type="button"
+                    onClick={() => setOpen(true)}
+                    className="rounded-control text-left focus:outline-none focus-visible:shadow-ring"
+                >
+                    <h3 className="ink-weight line-clamp-2 font-display text-[19px] leading-snug text-ink">
+                        {memory.title ?? "Untitled note"}
+                    </h3>
+                </button>
+
+                <p className="line-clamp-4 whitespace-pre-wrap text-body-sm text-ink-muted">
                     {memory.content}
                 </p>
 
                 {memory.topics.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 pt-1">
-                        {memory.topics.slice(0, 4).map((t) => (
-                            <span
+                    <ul className="flex flex-wrap gap-1.5">
+                        {memory.topics.slice(0, 3).map((t) => (
+                            <li
                                 key={t}
-                                className="text-[11px] px-2 py-0.5 rounded-full bg-indigo-tint text-indigo-soft border border-indigo-soft/15 font-medium"
+                                className="rounded-chip bg-surface-2 px-2 py-0.5 font-mono text-[12px] text-ink-muted"
                             >
                                 {t}
-                            </span>
+                            </li>
                         ))}
-                    </div>
+                        {memory.topics.length > 3 && (
+                            <li className="rounded-chip px-1 py-0.5 font-mono text-[12px] text-ink-subtle">
+                                +{memory.topics.length - 3}
+                            </li>
+                        )}
+                    </ul>
                 )}
 
-                <footer className="mt-auto pt-2 flex items-center justify-between text-xs text-ink-subtle">
-                    <time dateTime={memory.createdAt} title={formatIst(memory.createdAt)}>
-                        {relativeTime(memory.createdAt)}
-                    </time>
+                <footer className="mt-auto flex items-center justify-between gap-2 border-t border-border-subtle pt-3">
+                    <button
+                        type="button"
+                        onClick={() => setOpen(true)}
+                        className="rounded-control font-mono text-[12px] text-ink-subtle underline decoration-border-strong decoration-2 underline-offset-4 transition-colors duration-fast ease-standard hover:text-ink focus:outline-none focus-visible:shadow-ring"
+                    >
+                        open
+                    </button>
 
                     {confirming ? (
-                        <div
-                            className="flex items-center gap-1.5"
-                            onClick={(e) => e.stopPropagation()}
-                        >
+                        <span className="flex items-center gap-1">
                             <button
                                 type="button"
-                                onClick={(e) => { e.stopPropagation(); setConfirming(false); }}
-                                className="px-2 py-1 rounded-lg text-[11px] text-ink-muted hover:text-ink transition-colors"
+                                onClick={() => setConfirming(false)}
+                                className="rounded-control px-2 py-1 text-[13px] text-ink-muted transition-colors duration-fast ease-standard hover:text-ink focus:outline-none focus-visible:shadow-ring"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="button"
-                                onClick={handleDelete}
+                                onClick={() =>
+                                    deleteMutation.mutate(memory.id, {
+                                        onSuccess: () => setConfirming(false),
+                                    })
+                                }
                                 disabled={deleteMutation.isPending}
-                                className="px-2 py-1 rounded-lg text-[11px] font-medium text-rose-500 hover:bg-rose-50 transition-colors disabled:opacity-50"
+                                className="rounded-control px-2 py-1 text-[13px] font-semibold text-danger-fg transition-colors duration-fast ease-standard hover:bg-danger-tint disabled:opacity-45 focus:outline-none focus-visible:shadow-ring"
                             >
-                                {deleteMutation.isPending ? "…" : "Delete"}
+                                Delete
                             </button>
-                        </div>
+                        </span>
                     ) : (
                         <button
                             type="button"
-                            onClick={(e) => { e.stopPropagation(); setConfirming(true); }}
-                            aria-label="Delete"
-                            className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-ink-subtle hover:text-rose-500 hover:bg-rose-50 transition-all duration-200"
+                            onClick={() => setConfirming(true)}
+                            aria-label={`Delete ${memory.title ?? "note"}`}
+                            className="rounded-control p-1.5 text-ink-subtle transition-colors duration-fast ease-standard hover:bg-danger-tint hover:text-danger-fg focus:outline-none focus-visible:shadow-ring"
                         >
-                            <Trash2 className="w-3.5 h-3.5" />
+                            <Trash2 aria-hidden className="h-4 w-4" />
                         </button>
                     )}
                 </footer>

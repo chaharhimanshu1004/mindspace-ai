@@ -1,0 +1,44 @@
+:root {
+    --paper: 250 247 240;
+    --surface-1: 255 254 250;
+    --surface-2: 243 239 229;
+    --surface-3: 235 230 217;
+
+    --ink: 36 35 31;
+    --ink-muted: 87 82 74;
+    --ink-subtle: 98 92 81;
+    --ink-disabled: 169 162 148;
+
+    --line-subtle: 229 223 209;
+    --line-strong: 211 203 182;
+    --line-interactive: 138 130 113;
+
+    --accent-50: 241 238 230;
+    --accent-100: 231 226 214;
+    --accent-200: 214 208 192;
+    --accent-400: 138 130 113;
+    --accent-500: 36 35 31;
+    --accent-600: 21 20 15;
+    --accent-700: 36 35 31;
+
+    --success-fg: 79 107 62;
+    --success-tint: 236 240 225;
+    --success-line: 207 220 190;
+
+    --progress-fg: 130 83 19;
+    --progress-tint: 248 239 220;
+    --progress-line: 233 214 174;
+
+    --danger-fg: 179 38 30;
+    --danger-tint: 251 235 231;
+    --danger-line: 240 199 193;
+
+    --src-user: 36 35 31;
+    --src-user-tint: 241 238 230;
+    --src-claude: 143 84 54;
+    --src-claude-tint: 246 236 228;
+    --src-slack: 113 72 129;
+    --src-slack-tint: 243 237 244;
+    --src-telegram: 27 104 116;
+    --src-telegram-tint: 231 241 241;
+}

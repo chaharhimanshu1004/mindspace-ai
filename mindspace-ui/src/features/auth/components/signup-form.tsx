@@ -7,6 +7,7 @@ import { signupSchema, type SignupValues } from "../auth.schemas";
 import { useSignup } from "../hooks/use-signup";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Divider } from "@/components/ui/divider";
 import { GoogleSigninButton } from "./google-signin-button";
 
 export function SignupForm() {
@@ -25,14 +26,10 @@ export function SignupForm() {
         mutation.mutate({ email: values.email, password: values.password });
 
     return (
-        <div className="space-y-5">
+        <div className="space-y-6">
             <GoogleSigninButton label="Sign up with Google" />
 
-            <div className="flex items-center gap-3">
-                <div className="h-px flex-1 bg-[#E5E7EB]" />
-                <span className="text-[12px] font-medium text-[#9CA3AF]">or</span>
-                <div className="h-px flex-1 bg-[#E5E7EB]" />
-            </div>
+            <Divider label="or" />
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <Input
@@ -62,7 +59,7 @@ export function SignupForm() {
                 <Button
                     type="submit"
                     size="lg"
-                    className="w-full mt-2"
+                    className="mt-2 w-full"
                     loading={mutation.isPending}
                 >
                     Create my MindSpace

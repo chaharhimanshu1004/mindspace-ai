@@ -4,13 +4,10 @@ import { SignupForm } from "@/features/auth/components/signup-form";
 export default function SignupPage() {
     return (
         <AuthShell
-            title="Begin your MindSpace"
-            subtitle="A calm home for the thoughts you don't want to lose."
-            footer={{
-                prompt: "Already have one?",
-                href: "/login",
-                cta: "Log in",
-            }}
+            overline="create account"
+            title="Start with one note"
+            subtitle="Free to set up. Connect a source when you want one."
+            footer={{ prompt: "Already have an account?", href: "/login", cta: "Log in" }}
         >
             <SignupForm />
         </AuthShell>

@@ -1,103 +1,101 @@
-import { Sparkles, Plug, Hash } from "lucide-react";
+import Link from "next/link";
+import { Hash, PenLine, Plug, Send, Terminal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import type { MemoryEmptyProps } from "./memory-empty.types";
 
-export interface SlackEmptyContext {
-    connected: boolean;
-    hasSubscriptions: boolean;
-    onConnect: () => void;
-    onOpenPicker: () => void;
-}
-
-interface Props {
-    slackContext?: SlackEmptyContext;
-}
-
-function SlackEmpty({ connected, hasSubscriptions, onConnect, onOpenPicker }: SlackEmptyContext) {
-    if (!connected) {
+function SlackEmpty({ slack }: Required<Pick<MemoryEmptyProps, "slack">>) {
+    if (!slack.connected) {
         return (
-            <div className="text-center pt-8 pb-20 sm:pt-10 sm:pb-28">
-                <div className="relative mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F5F5FF] border border-[#6366F1]/20 text-[#6366F1]">
-                    <Plug className="h-6 w-6" />
-                </div>
-                <h2 className="text-xl font-bold tracking-tight text-[#2F3441]">
-                    Slack isn&rsquo;t connected
-                </h2>
-                <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[#6B7280]">
-                    Connect your Slack workspace so MindSpace can start capturing your team conversations automatically.
-                </p>
-                <button
-                    type="button"
-                    onClick={onConnect}
-                    className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#6366F1] px-5 py-2.5 text-[13px] font-semibold text-white shadow-soft hover:bg-[#4F46E5] transition-colors"
-                >
-                    Connect Slack →
-                </button>
-                <p className="mt-3 text-[11px] text-[#9CA3AF]">
-                    Go to Profile → Integrations → Slack
-                </p>
-            </div>
+            <EmptyState
+                icon={Plug}
+                title="Slack isn't connected"
+                body="Connect your workspace and MindSpace will roll up the channels you pick."
+                action={<Button onClick={slack.onConnect}>Connect Slack</Button>}
+                note="profile → integrations → slack"
+            />
         );
     }
 
-    if (!hasSubscriptions) {
+    if (!slack.hasSubscriptions) {
         return (
-            <div className="text-center py-20 sm:py-28">
-                <div className="relative mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50 border border-amber-200 text-amber-600">
-                    <Hash className="h-6 w-6" />
-                </div>
-                <h2 className="text-xl font-bold tracking-tight text-[#2F3441]">
-                    No channels selected yet
-                </h2>
-                <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[#6B7280]">
-                    Slack is connected but you haven&rsquo;t subscribed to any channels. Pick the ones you want MindSpace to watch.
-                </p>
-                <button
-                    type="button"
-                    onClick={onOpenPicker}
-                    className="mt-6 inline-flex items-center gap-2 rounded-xl bg-amber-500 px-5 py-2.5 text-[13px] font-semibold text-white shadow-soft hover:bg-amber-600 transition-colors"
-                >
-                    Select channels to sync →
-                </button>
-                <p className="mt-3 text-[11px] text-[#9CA3AF]">
-                    Go to Profile → Integrations → Slack → Select channels
-                </p>
-            </div>
+            <EmptyState
+                icon={Hash}
+                title="No channels picked yet"
+                body="Slack is connected. Choose which channels MindSpace should watch."
+                action={
+                    <Button variant="secondary" onClick={slack.onOpenPicker}>
+                        Select channels
+                    </Button>
+                }
+                note="rollups run on the hour"
+            />
         );
     }
 
     return (
-        <div className="text-center py-20 sm:py-28">
-            <div className="relative mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#818CF8] to-[#6366F1] text-white shadow-[0_12px_28px_rgba(99,102,241,0.35)]">
-                <span className="absolute inset-0 animate-pulse-ring rounded-2xl bg-[#6366F1]/25" />
-                <Sparkles className="relative h-6 w-6" />
-            </div>
-            <h2 className="text-xl font-bold tracking-tight text-[#2F3441]">
-                Syncing soon
-            </h2>
-            <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[#6B7280]">
-                Your channels are subscribed. New messages will appear here automatically after the next sync.
-            </p>
-        </div>
+        <EmptyState
+            icon={Hash}
+            title="Nothing rolled up yet"
+            body="Your channels are subscribed. Memories appear after the next rollup."
+            note="rollups run on the hour"
+        />
     );
 }
 
-export function MemoryEmpty({ slackContext }: Props) {
-    if (slackContext) {
-        return <SlackEmpty {...slackContext} />;
+function TelegramEmpty({ telegram }: Required<Pick<MemoryEmptyProps, "telegram">>) {
+    if (!telegram.connected) {
+        return (
+            <EmptyState
+                icon={Plug}
+                title="Telegram isn't connected"
+                body="Pair the bot once, then save thoughts and ask questions from the chat."
+                action={<Button onClick={telegram.onConnect}>Connect Telegram</Button>}
+                note="profile → integrations → telegram"
+            />
+        );
     }
 
     return (
-        <div className="text-center py-20 sm:py-28">
-            <div className="relative mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#818CF8] to-[#6366F1] text-white shadow-[0_12px_28px_rgba(99,102,241,0.35)]">
-                <span className="absolute inset-0 animate-pulse-ring rounded-2xl bg-[#6366F1]/25" />
-                <Sparkles className="relative h-6 w-6" />
-            </div>
-            <h2 className="text-xl font-bold tracking-tight text-[#2F3441]">
-                A quiet beginning
-            </h2>
-            <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[#6B7280]">
-                Write your first thought below. It&rsquo;ll quietly find its
-                place among everything else you save.
-            </p>
-        </div>
+        <EmptyState
+            icon={Send}
+            title="Nothing saved from Telegram yet"
+            body="Send the bot a message to save your first thought from your phone."
+            note="/save your thought"
+        />
+    );
+}
+
+function ClaudeEmpty() {
+    return (
+        <EmptyState
+            icon={Terminal}
+            title="Claude Code isn't connected"
+            body="Add MindSpace as an MCP server and your terminal sessions can read and write here."
+            action={
+                <Link
+                    href="/guide"
+                    className="inline-flex h-11 items-center rounded-control border border-border-interactive bg-surface-1 px-5 text-body font-semibold text-ink transition-colors duration-fast ease-standard hover:bg-surface-3 focus:outline-none focus-visible:shadow-ring"
+                >
+                    Read the guide
+                </Link>
+            }
+            note="oauth 2.0 · pkce"
+        />
+    );
+}
+
+export function MemoryEmpty({ sourceType, slack, telegram }: MemoryEmptyProps) {
+    if (sourceType === "slack" && slack) return <SlackEmpty slack={slack} />;
+    if (sourceType === "telegram" && telegram) return <TelegramEmpty telegram={telegram} />;
+    if (sourceType === "claude_code") return <ClaudeEmpty />;
+
+    return (
+        <EmptyState
+            icon={PenLine}
+            title="Nothing here yet"
+            body="Write your first thought below. Everything you save lands in one index."
+            note="enter to save"
+        />
     );
 }

@@ -40,15 +40,15 @@ export function GettingStartedSection() {
                         return (
                             <div
                                 key={p.title}
-                                className="rounded-2xl border border-[#E9E8E2] bg-white/70 p-5 shadow-soft backdrop-blur"
+                                className="rounded-2xl border border-[#E5DFD1] bg-white/70 p-5 shadow-soft backdrop-blur"
                             >
-                                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#EEF0FF] text-[#6366F1]">
+                                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#F1EEE6] text-[#24231F]">
                                     <Icon className="h-5 w-5" />
                                 </span>
-                                <h4 className="mt-4 text-[15px] font-semibold tracking-tight text-[#2F3441]">
+                                <h4 className="mt-4 text-[15px] font-semibold tracking-tight text-[#24231F]">
                                     {p.title}
                                 </h4>
-                                <p className="mt-1.5 text-[13.5px] leading-relaxed text-[#6B7280]">
+                                <p className="mt-1.5 text-[13.5px] leading-relaxed text-[#57524A]">
                                     {p.body}
                                 </p>
                             </div>
@@ -74,11 +74,11 @@ export function GettingStartedSection() {
                         <p>
                             Use the composer at the bottom of the Memories page.
                             Within seconds it moves from{" "}
-                            <code className="rounded bg-[#EEF0FF] px-1.5 py-0.5 font-mono text-[12px] text-[#6366F1]">
+                            <code className="rounded bg-[#F1EEE6] px-1.5 py-0.5 font-mono text-[12px] text-[#24231F]">
                                 pending
                             </code>{" "}
                             to{" "}
-                            <code className="rounded bg-[#EEF0FF] px-1.5 py-0.5 font-mono text-[12px] text-[#6366F1]">
+                            <code className="rounded bg-[#F1EEE6] px-1.5 py-0.5 font-mono text-[12px] text-[#24231F]">
                                 enriched
                             </code>
                             .

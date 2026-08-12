@@ -19,7 +19,7 @@ export function CodeBlock({ code, label }: Props) {
     };
 
     return (
-        <div className="overflow-hidden rounded-2xl border border-border-softer bg-[#2F3441] shadow-soft">
+        <div className="overflow-hidden rounded-2xl border border-border-softer bg-[#24231F] shadow-soft">
             <div className="flex items-center justify-between border-b border-white/5 px-4 py-2.5">
                 <div className="flex items-center gap-1.5">
                     <span className="h-2.5 w-2.5 rounded-full bg-white/15" />

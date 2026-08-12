@@ -41,12 +41,12 @@ export function ReferenceSection() {
                     {faqs.map((f) => (
                         <div
                             key={f.q}
-                            className="rounded-2xl border border-[#E9E8E2] bg-white/70 p-5 shadow-soft backdrop-blur"
+                            className="rounded-2xl border border-[#E5DFD1] bg-white/70 p-5 shadow-soft backdrop-blur"
                         >
-                            <h4 className="text-[15px] font-semibold tracking-tight text-[#2F3441]">
+                            <h4 className="text-[15px] font-semibold tracking-tight text-[#24231F]">
                                 {f.q}
                             </h4>
-                            <p className="mt-1.5 text-[14px] leading-relaxed text-[#6B7280]">
+                            <p className="mt-1.5 text-[14px] leading-relaxed text-[#57524A]">
                                 {f.a}
                             </p>
                         </div>

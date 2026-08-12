@@ -1,3 +1,5 @@
+@import "../styles/tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,42 +11,79 @@
 
     html,
     body {
-        background-color: #FAFAF7;
-        color: #2F3441;
+        background-color: rgb(var(--paper));
+        color: rgb(var(--ink));
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
     }
 
     ::selection {
-        background-color: rgba(99, 102, 241, 0.18);
-        color: #2F3441;
+        background-color: rgb(var(--accent-500) / 0.18);
+        color: rgb(var(--ink));
+    }
+
+    :focus-visible {
+        outline: none;
     }
 }
 
 @layer utilities {
     .code-selection *::selection,
     .code-selection::selection {
-        background-color: rgba(165, 180, 252, 0.35);
-        color: #ffffff;
+        background-color: rgb(var(--accent-200) / 0.45);
+        color: rgb(var(--ink));
     }
 
     .calm-gradient {
         background:
-            radial-gradient(1200px 600px at 80% -10%, rgba(99, 102, 241, 0.07), transparent 60%),
-            radial-gradient(900px 500px at -10% 110%, rgba(163, 177, 138, 0.10), transparent 60%);
+            radial-gradient(1200px 600px at 80% -10%, rgb(var(--accent-500) / 0.06), transparent 60%),
+            radial-gradient(900px 500px at -10% 110%, rgb(var(--success-fg) / 0.05), transparent 60%);
     }
 
     .grain {
-        background-image: radial-gradient(rgba(47, 52, 65, 0.025) 1px, transparent 1px);
+        background-image: radial-gradient(rgb(var(--ink) / 0.025) 1px, transparent 1px);
         background-size: 3px 3px;
+    }
+
+    .hairline-grid {
+        background-image:
+            linear-gradient(to right, rgb(var(--line-subtle)) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(var(--line-subtle)) 1px, transparent 1px);
+        background-size: 64px 64px;
+    }
+
+    .tnum {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .marquee-mask {
+        mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 7%,
+            black 93%,
+            transparent
+        );
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 7%,
+            black 93%,
+            transparent
+        );
+    }
+
+    .ink-weight {
+        -webkit-text-stroke: 0.3px currentColor;
+        paint-order: stroke fill;
     }
 }
 
 @keyframes modal-scale-in {
     from {
         opacity: 0;
-        transform: scale(0.95) translateY(12px);
+        transform: scale(0.98) translateY(8px);
     }
     to {
         opacity: 1;
@@ -61,30 +100,23 @@
     }
 }
 
-.animate-modal-in {
-    animation: modal-scale-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-.animate-overlay-in {
-    animation: overlay-fade-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
 @keyframes float-soft {
-    0%, 100% {
+    0%,
+    100% {
         transform: translateY(0);
     }
     50% {
-        transform: translateY(-8px);
+        transform: translateY(-6px);
     }
 }
 
 @keyframes pulse-ring {
     0% {
         transform: scale(0.92);
-        opacity: 0.7;
+        opacity: 0.55;
     }
     70% {
-        transform: scale(1.6);
+        transform: scale(1.55);
         opacity: 0;
     }
     100% {
@@ -101,7 +133,7 @@
 @keyframes rise-in {
     from {
         opacity: 0;
-        transform: translateY(16px);
+        transform: translateY(12px);
     }
     to {
         opacity: 1;
@@ -109,12 +141,35 @@
     }
 }
 
+@keyframes shimmer {
+    to {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes marquee-drift {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+.animate-modal-in {
+    animation: modal-scale-in 240ms cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
+.animate-overlay-in {
+    animation: overlay-fade-in 180ms cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
 .animate-float {
-    animation: float-soft 6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    animation: float-soft 7s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 .animate-pulse-ring {
-    animation: pulse-ring 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    animation: pulse-ring 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 .animate-flow {
@@ -122,6 +177,37 @@
     animation: flow-dash 1s linear infinite;
 }
 
+.marquee-track {
+    animation: marquee-drift 52s linear infinite;
+    will-change: transform;
+}
+
+.marquee-track:hover {
+    animation-play-state: paused;
+}
+
+.marquee-reverse {
+    animation-direction: reverse;
+}
+
 .animate-rise {
-    animation: rise-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: rise-in 480ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .animate-float,
+    .animate-pulse-ring,
+    .animate-flow,
+    .marquee-track {
+        animation: none !important;
+    }
 }

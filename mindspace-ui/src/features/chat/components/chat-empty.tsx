@@ -1,19 +1,29 @@
+import { Overline } from "@/components/ui/overline";
+
+const examples = [
+    "what did I decide about pricing?",
+    "why did we drop polling for webhooks?",
+    "what's still open on the memory graph?",
+];
+
 export function ChatEmpty() {
     return (
-        <div className="h-full min-h-[40vh] flex items-center justify-center text-center px-6">
-            <div className="max-w-md">
-                <span className="inline-flex items-center gap-2 text-xs tracking-[0.18em] uppercase text-ink-subtle">
-                    <span className="w-1.5 h-1.5 rounded-full bg-sage" />
-                    ask your second brain
-                </span>
-                <h2 className="mt-5 text-2xl tracking-tight text-ink font-medium">
-                    What were you thinking about?
-                </h2>
-                <p className="mt-3 text-ink-muted text-[15px] leading-relaxed">
-                    Ask anything about the thoughts you&rsquo;ve saved. Your memories
-                    will quietly surface the relevant pieces.
-                </p>
-            </div>
+        <div className="mx-auto flex min-h-[40vh] max-w-prose flex-col justify-center">
+            <Overline>ask</Overline>
+            <h1 className="ink-weight mt-4 font-display text-[26px] leading-[1.14] tracking-[-0.015em] text-ink sm:text-display-md">
+                Ask your own notes
+            </h1>
+            <p className="mt-3 text-body text-ink-muted">
+                Answers come only from what you have saved, with the notes cited.
+            </p>
+
+            <ul className="mt-8 flex flex-col gap-px overflow-hidden rounded-card border border-border-subtle bg-border-subtle">
+                {examples.map((q) => (
+                    <li key={q} className="bg-surface-1 px-4 py-3 font-mono text-[13px] text-ink-muted">
+                        {q}
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 }

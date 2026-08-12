@@ -12,7 +12,7 @@ export function CalendarSection() {
             title="Google Calendar"
             intro="When a thought carries a deadline, MindSpace can place it on your calendar — so intentions you jot down don't quietly slip away."
         >
-            <div className="rounded-3xl border border-[#E9E8E2] bg-white/70 p-6 shadow-soft backdrop-blur sm:p-8">
+            <div className="rounded-3xl border border-[#E5DFD1] bg-white/70 p-6 shadow-soft backdrop-blur sm:p-8">
                 <IntegrationHeader
                     icon={GoogleCalendarIcon}
                     brand

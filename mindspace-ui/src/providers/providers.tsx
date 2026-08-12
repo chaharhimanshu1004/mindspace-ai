@@ -26,13 +26,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
                     success: {
                         iconTheme: {
                             primary: "#A3B18A",
-                            secondary: "#FAFAF7",
+                            secondary: "#FAF7F0",
                         },
                     },
                     error: {
                         iconTheme: {
                             primary: "#EF4444",
-                            secondary: "#FAFAF7",
+                            secondary: "#FAF7F0",
                         },
                     },
                 }}

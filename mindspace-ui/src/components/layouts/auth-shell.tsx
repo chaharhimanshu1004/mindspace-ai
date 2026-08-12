@@ -1,60 +1,64 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/brand/brand-mark";
-import { AuthArt } from "./auth-art";
+import { MemoryGraph } from "@/components/graph/memory-graph";
+import { Overline } from "@/components/ui/overline";
+import { PageRules } from "./page-rules";
 
 interface Props {
+    overline: string;
     title: string;
     subtitle: string;
     footer: { prompt: string; href: string; cta: string };
-    artSide?: "left" | "right";
+    graphSide?: "left" | "right";
     children: React.ReactNode;
 }
 
 export function AuthShell({
+    overline,
     title,
     subtitle,
     footer,
-    artSide = "right",
+    graphSide = "right",
     children,
 }: Props) {
     return (
-        <main
-            className={`flex min-h-screen bg-[#FAFAF7] ${
-                artSide === "left" ? "lg:flex-row-reverse" : ""
-            }`}
-        >
-            <div className="relative flex w-full flex-col lg:w-[48%]">
-                <header className="px-6 pt-8 sm:px-12">
-                    <BrandMark href="/" />
-                </header>
+        <main className="relative grain min-h-svh bg-paper">
+            <PageRules />
 
-                <section className="flex flex-1 items-center justify-center px-6 py-12 sm:px-12">
-                    <div className="w-full max-w-sm">
-                        <h1 className="text-[30px] font-bold leading-tight tracking-tight text-[#2F3441] sm:text-[34px]">
+            <header className="border-b border-border-subtle">
+                <div className="mx-auto flex min-h-[4.5rem] w-full max-w-content items-center px-11 py-3.5 sm:px-16 lg:px-20">
+                    <BrandMark href="/" />
+                </div>
+            </header>
+
+            <div className={`mx-auto flex w-full max-w-content flex-col gap-14 px-11 pb-20 pt-6 sm:px-16 sm:pt-10 lg:items-center lg:gap-16 lg:px-20 ${graphSide === "left" ? "lg:flex-row-reverse" : "lg:flex-row"}`}>
+                <section className="w-full lg:flex-1">
+                    <div className="w-full max-w-[26rem]">
+                        <Overline>{overline}</Overline>
+
+                        <h1 className="ink-weight mt-5 font-display text-[26px] leading-[1.14] tracking-[-0.015em] text-ink sm:text-display-md">
                             {title}
                         </h1>
-                        <p className="mt-2 text-[15px] leading-relaxed text-[#6B7280]">
-                            {subtitle}
-                        </p>
+                        <p className="mt-3 text-body text-ink-muted">{subtitle}</p>
 
-                        <div className="mt-8">{children}</div>
+                        <div className="mt-9">{children}</div>
 
-                        <p className="mt-7 text-sm text-[#6B7280]">
+                        <p className="mt-9 border-t border-border-subtle pt-6 text-body-sm text-ink-muted">
                             {footer.prompt}{" "}
                             <Link
                                 href={footer.href}
-                                className="font-semibold text-[#6366F1] transition-colors duration-300 ease-calm hover:text-[#5457E0]"
+                                className="rounded-control font-semibold text-ink underline decoration-border-strong decoration-2 underline-offset-4 transition-colors duration-fast ease-standard hover:decoration-ink focus:outline-none focus-visible:shadow-ring"
                             >
                                 {footer.cta}
                             </Link>
                         </p>
                     </div>
                 </section>
-            </div>
 
-            <aside className="hidden lg:block lg:w-[52%]">
-                <AuthArt />
-            </aside>
+                <aside className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-center">
+                    <MemoryGraph />
+                </aside>
+            </div>
         </main>
     );
 }
