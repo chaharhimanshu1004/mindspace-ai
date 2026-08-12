@@ -4,8 +4,9 @@ import { OtpForm } from "@/features/auth/components/otp-form";
 export default function VerifyOtpPage() {
     return (
         <AuthShell
+            overline="verify email"
             title="Check your inbox"
-            subtitle="Enter the 6-digit code we sent to your email."
+            subtitle="Enter the six-digit code we just sent you."
             footer={{ prompt: "Wrong email?", href: "/signup", cta: "Start over" }}
         >
             <OtpForm />

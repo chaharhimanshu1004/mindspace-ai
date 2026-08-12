@@ -48,7 +48,7 @@ class EnrichmentService:
                 schema=EnrichmentResult,
                 wire_schema=build_enrichment_gemini_schema(),
                 system=ENRICH_SYSTEM,
-                temperature=0.2,
+                temperature=0.2, # high temp = high creativity and less facts !
             )
         )
         result = structured.parsed

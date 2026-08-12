@@ -1,5 +1,6 @@
 "use client";
 
+import { AlertTriangle } from "lucide-react";
 import { ChatSources } from "./chat-sources";
 import type { ChatSource } from "../chat.types";
 
@@ -11,50 +12,38 @@ interface Props {
     allSourcesDeleted?: boolean;
 }
 
-const userBubble =
-    "self-end bg-indigo-soft text-white rounded-3xl rounded-br-md px-5 py-3 shadow-soft max-w-[80%]";
-const assistantBubble =
-    "self-start bg-white/85 backdrop-blur-sm border border-border-subtle text-ink rounded-3xl rounded-bl-md p-5 shadow-soft max-w-[85%] w-full";
+function RoleLabel({ children }: { children: string }) {
+    return (
+        <span className="mb-1.5 block font-mono text-[12px] uppercase tracking-[0.1em] text-ink-subtle">
+            {children}
+        </span>
+    );
+}
 
 export function ChatMessage({ role, content, sources, pending, allSourcesDeleted }: Props) {
     if (role === "user") {
         return (
-            <div className="flex flex-col">
-                <div className={userBubble}>
-                    <p className="text-[15px] whitespace-pre-wrap leading-relaxed">
-                        {content}
-                    </p>
+            <div className="flex flex-col items-end">
+                <div className="max-w-[85%]">
+                    <RoleLabel>you</RoleLabel>
+                    <div className="rounded-card border border-border-strong bg-surface-2 px-4 py-3">
+                        <p className="whitespace-pre-wrap text-body text-ink">{content}</p>
+                    </div>
                 </div>
             </div>
         );
     }
 
-    if (role === "assistant" && allSourcesDeleted) {
+    if (allSourcesDeleted) {
         return (
-            <div className="flex flex-col">
-                <div className={[
-                    assistantBubble,
-                    "border-dashed border-red-200 bg-red-50/50 shadow-none"
-                ].join(" ")}>
-                    <div className="flex items-start gap-2.5 text-red-600/95 leading-relaxed text-sm">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-5 h-5 flex-shrink-0 mt-0.5"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
-                            />
-                        </svg>
-                        <div>
-                            <span className="font-semibold block mb-0.5 text-[14px]">Response Unavailable</span>
-                            The source memories supporting this answer have been deleted from your mindspace. To preserve accuracy, this response is no longer available.
-                        </div>
+            <div className="w-full">
+                <RoleLabel>mindspace</RoleLabel>
+                <div className="flex items-start gap-3 rounded-card border border-danger-line bg-danger-tint p-4">
+                    <AlertTriangle aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-danger-fg" />
+                    <div className="text-body-sm text-danger-fg">
+                        <span className="block font-semibold">Answer withdrawn</span>
+                        The notes this answer was built from have been deleted, so it can no
+                        longer be shown.
                     </div>
                 </div>
             </div>
@@ -62,23 +51,20 @@ export function ChatMessage({ role, content, sources, pending, allSourcesDeleted
     }
 
     return (
-        <div className="flex flex-col">
-            <div className={assistantBubble}>
+        <div className="w-full">
+            <RoleLabel>mindspace</RoleLabel>
+            <div className="rounded-card border border-border-subtle bg-surface-1 p-5 shadow-card">
                 {pending ? (
-                    <span className="inline-flex gap-1 items-center text-ink-muted">
-                        <span className="w-1.5 h-1.5 rounded-full bg-ink-subtle animate-pulse" />
-                        <span className="w-1.5 h-1.5 rounded-full bg-ink-subtle animate-pulse [animation-delay:120ms]" />
-                        <span className="w-1.5 h-1.5 rounded-full bg-ink-subtle animate-pulse [animation-delay:240ms]" />
+                    <span className="inline-flex items-center gap-1.5" aria-label="Thinking">
+                        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ink-subtle" />
+                        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ink-subtle [animation-delay:120ms]" />
+                        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ink-subtle [animation-delay:240ms]" />
                     </span>
                 ) : (
-                    <>
-                        <p className="text-[15px] whitespace-pre-wrap leading-relaxed text-ink">
-                            {content}
-                        </p>
-                        {sources && sources.length > 0 ? (
-                            <ChatSources sources={sources} />
-                        ) : null}
-                    </>
+                    <div aria-live="polite">
+                        <p className="whitespace-pre-wrap text-body-lg text-ink">{content}</p>
+                        {sources && sources.length > 0 ? <ChatSources sources={sources} /> : null}
+                    </div>
                 )}
             </div>
         </div>

@@ -16,7 +16,7 @@ export function TelegramSection() {
             title="Telegram"
             intro="Capture and recall on the move. Pair the MindSpace bot once, then save thoughts and query your brain with two simple commands."
         >
-            <div className="rounded-3xl border border-[#E9E8E2] bg-white/70 p-6 shadow-soft backdrop-blur sm:p-8">
+            <div className="rounded-3xl border border-[#E5DFD1] bg-white/70 p-6 shadow-soft backdrop-blur sm:p-8">
                 <IntegrationHeader
                     icon={TelegramIcon}
                     brand
@@ -30,7 +30,7 @@ export function TelegramSection() {
                             Open Settings → Integrations → Telegram and press
                             Connect. MindSpace opens the bot with a one-time
                             pairing link (
-                            <code className="rounded bg-[#EEF0FF] px-1.5 py-0.5 font-mono text-[12px] text-[#6366F1]">
+                            <code className="rounded bg-[#F1EEE6] px-1.5 py-0.5 font-mono text-[12px] text-[#24231F]">
                                 /start pair_…
                             </code>
                             ).
@@ -71,11 +71,11 @@ export function TelegramSection() {
                     <GuideCallout>
                         Plain messages without a command aren&rsquo;t saved — the
                         bot will remind you to start with{" "}
-                        <code className="rounded bg-white/70 px-1.5 py-0.5 font-mono text-[12px] text-[#6366F1]">
+                        <code className="rounded bg-white/70 px-1.5 py-0.5 font-mono text-[12px] text-[#24231F]">
                             /save
                         </code>{" "}
                         or{" "}
-                        <code className="rounded bg-white/70 px-1.5 py-0.5 font-mono text-[12px] text-[#6366F1]">
+                        <code className="rounded bg-white/70 px-1.5 py-0.5 font-mono text-[12px] text-[#24231F]">
                             /ask
                         </code>
                         .

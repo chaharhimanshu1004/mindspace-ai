@@ -34,8 +34,8 @@ class EmbedService:
     ) -> EmbedResult:
         chunks = (
             chunk_content(content)
-            if source_type in _CHUNKED_SOURCE_TYPES
-            else [content.strip()]
+            if source_type in _CHUNKED_SOURCE_TYPES #conditional expression, if source_type -> true -> chunk_content runs, else content.strip()
+            else [content.strip()] # <value_if_true> if <condition> else <value_if_false>
         )
 
         if not chunks:

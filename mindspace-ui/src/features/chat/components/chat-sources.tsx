@@ -14,11 +14,11 @@ export function ChatSources({ sources }: Props) {
     if (cited.length === 0 || cited.length === deletedCount) return null;
 
     return (
-        <div className="mt-4 pt-4 border-t border-border-softer">
-            <div className="flex flex-col gap-2">
-                <span className="text-[10px] tracking-[0.18em] uppercase text-ink-subtle">
-                    from your memories
-                </span>
+        <div className="mt-5 border-t border-border-subtle pt-4">
+            <span className="font-mono text-[12px] uppercase tracking-[0.1em] text-ink-subtle">
+                cited notes
+            </span>
+            <div className="mt-3 flex flex-col gap-2">
                 {cited.map((s) => (
                     <ChatSourceCard key={s.memoryId} source={s} />
                 ))}

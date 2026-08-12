@@ -55,7 +55,7 @@ export function Modal({ open, onClose, children, labelledBy }: Props) {
                 className={[
                     "absolute inset-0 w-full h-full",
                     "bg-ink/30 backdrop-blur-md",
-                    "transition-opacity duration-300 ease-calm",
+                    "transition-opacity duration-base ease-standard",
                 ].join(" ")}
             />
 
@@ -65,11 +65,11 @@ export function Modal({ open, onClose, children, labelledBy }: Props) {
                     "relative",
                     "w-full sm:w-[720px]",
                     "h-full sm:h-[476px]",
-                    "sm:rounded-3xl overflow-hidden",
+                    "sm:rounded-card overflow-hidden",
                     "border-0 sm:border sm:border-ink/10",
-                    "shadow-[0_24px_80px_-20px_rgba(47,52,65,0.35)]",
+                    "shadow-[0_24px_80px_-20px_rgba(36,35,31,0.35)]",
                     "flex flex-col",
-                    "bg-[#FAFAF7]",
+                    "bg-[#FAF7F0]",
                 ].join(" ")}
             >
                 {children}

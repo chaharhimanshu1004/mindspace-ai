@@ -8,15 +8,15 @@ interface Props {
 export function BrandTile({ icon: Icon, brand }: Props) {
     if (brand) {
         return (
-            <span className="inline-flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl border border-[#E9E8E2] bg-white shadow-soft">
-                <Icon className="h-7 w-7" />
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-control border border-border-subtle bg-surface-1">
+                <Icon className="h-6 w-6" />
             </span>
         );
     }
 
     return (
-        <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[#EEF0FF] text-[#6366F1]">
-            <Icon className="h-5 w-5" />
+        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-control border border-border-strong text-ink-muted">
+            <Icon className="h-[18px] w-[18px]" />
         </span>
     );
 }

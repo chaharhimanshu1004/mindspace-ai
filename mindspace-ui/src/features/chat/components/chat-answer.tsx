@@ -19,7 +19,7 @@ export function ChatAnswer({ text, sources }: Props) {
     const segments = useMemo(() => parseAnswer(text), [text]);
 
     return (
-        <div className="text-[15px] leading-relaxed text-ink whitespace-pre-wrap">
+        <div className="whitespace-pre-wrap text-body-lg text-ink">
             {segments.map((seg, idx) => {
                 if (seg.kind === "prose") {
                     return <Fragment key={idx}>{seg.text}</Fragment>;
@@ -29,10 +29,7 @@ export function ChatAnswer({ text, sources }: Props) {
                 return (
                     <span
                         key={idx}
-                        className={[
-                            "text-indigo-soft font-medium",
-                            "border-b border-indigo-soft/25 pb-px",
-                        ].join(" ")}
+                        className="font-medium text-ink underline decoration-border-strong decoration-2 underline-offset-2"
                         title={
                             source
                                 ? `Your saved memory · ${new Date(

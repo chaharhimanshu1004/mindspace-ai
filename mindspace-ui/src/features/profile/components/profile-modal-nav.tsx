@@ -15,7 +15,7 @@ export function ProfileModalNav({ active, onChange, onSignOut }: Props) {
         <nav
             className={[
                 "shrink-0",
-                "border-b sm:border-b-0 sm:border-r border-[#E9E8E2]",
+                "border-b sm:border-b-0 sm:border-r border-[#E5DFD1]",
                 "bg-white/50",
                 "px-3 sm:px-3 py-3 sm:py-5",
                 "sm:w-52",
@@ -23,7 +23,7 @@ export function ProfileModalNav({ active, onChange, onSignOut }: Props) {
                 "flex flex-col",
             ].join(" ")}
         >
-            <span className="hidden sm:block text-[10px] tracking-[0.18em] uppercase text-[#2F3441] px-3 mb-3 font-bold">
+            <span className="hidden sm:block text-[10px] tracking-[0.18em] uppercase text-[#24231F] px-3 mb-3 font-bold">
                 Settings
             </span>
             <ul className="flex sm:flex-col gap-1">
@@ -40,8 +40,8 @@ export function ProfileModalNav({ active, onChange, onSignOut }: Props) {
                                     "transition-all duration-300 ease-calm",
                                     "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-soft/40",
                                     isActive
-                                        ? "bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white shadow-soft"
-                                        : "text-[#2F3441] hover:bg-[#2F3441]/5",
+                                        ? "bg-gradient-to-r from-[#24231F] to-[#57524A] text-white shadow-soft"
+                                        : "text-[#24231F] hover:bg-[#24231F]/5",
                                 ].join(" ")}
                             >
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
@@ -54,7 +54,7 @@ export function ProfileModalNav({ active, onChange, onSignOut }: Props) {
                 })}
             </ul>
 
-            <div className="hidden sm:block mt-auto pt-3 border-t border-[#E9E8E2]">
+            <div className="hidden sm:block mt-auto pt-3 border-t border-[#E5DFD1]">
                 <button
                     type="button"
                     onClick={onSignOut}

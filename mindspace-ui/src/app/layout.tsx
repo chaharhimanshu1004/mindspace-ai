@@ -1,13 +1,29 @@
 import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import localFont from "next/font/local";
 import { Providers } from "@/providers/providers";
 import "./globals.css";
+
+const sans = localFont({
+    src: "./fonts/space-grotesk-var.woff2",
+    weight: "300 700",
+    style: "normal",
+    display: "swap",
+    variable: "--font-sans",
+});
+
+const display = localFont({
+    src: "./fonts/faculty-glyphic-400.woff2",
+    weight: "400",
+    style: "normal",
+    display: "swap",
+    variable: "--font-display",
+});
 
 export const metadata: Metadata = {
     title: "MindSpace — Your second brain",
     description:
-        "A calm, AI-native memory sanctuary where your thoughts find each other.",
+        "Notes from the web, Slack, Telegram and Claude Code, embedded into one index you can question.",
 };
 
 export default function RootLayout({
@@ -18,9 +34,12 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`${GeistSans.variable} ${GeistMono.variable}`}
+            className={`${sans.variable} ${display.variable} ${GeistMono.variable}`}
         >
-            <body suppressHydrationWarning className="min-h-screen bg-canvas text-ink font-sans antialiased">
+            <body
+                suppressHydrationWarning
+                className="min-h-screen bg-paper font-sans text-ink antialiased"
+            >
                 <Providers>{children}</Providers>
             </body>
         </html>

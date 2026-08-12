@@ -6,13 +6,13 @@ interface Props {
 }
 
 export function ChatSourceCard({ source }: Props) {
-    const accentDot = source.cited ? "bg-indigo-soft" : "bg-ink-subtle/40";
+    const accentDot = source.cited ? "bg-ink" : "bg-ink-subtle/40";
 
     if (source.deleted) {
         return (
             <article
                 className={[
-                    "bg-ink-tint/10 backdrop-blur-sm rounded-2xl border border-dashed border-border-subtle",
+                    "bg-ink-tint/10 rounded-control border border-dashed border-border-subtle",
                     "p-4 opacity-70 select-none",
                 ].join(" ")}
             >
@@ -50,11 +50,11 @@ export function ChatSourceCard({ source }: Props) {
     return (
         <article
             className={[
-                "bg-white/90 backdrop-blur-sm rounded-2xl shadow-soft",
-                "p-4 transition-all duration-300 ease-calm",
-                "hover:shadow-lift",
+                "bg-surface-1/90 rounded-control shadow-card",
+                "p-4 transition-all duration-base ease-standard",
+                "hover:shadow-card-hover",
                 source.cited
-                    ? "border border-indigo-soft/25"
+                    ? "border border-border-strong/25"
                     : "border border-border-subtle",
             ].join(" ")}
         >

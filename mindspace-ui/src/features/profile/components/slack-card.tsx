@@ -23,17 +23,17 @@ export function SlackCard({ connected, loading, disconnecting, onConnect, onDisc
         <>
             <article
                 className={[
-                    "bg-white border border-[#E9E8E2] rounded-2xl",
+                    "bg-white border border-[#E5DFD1] rounded-2xl",
                     "p-5 flex flex-col gap-4",
                     "transition-all duration-300 ease-calm",
-                    "hover:border-[#6366F1]/20 hover:shadow-soft",
+                    "hover:border-[#24231F]/20 hover:shadow-soft",
                 ].join(" ")}
             >
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                     <div
                         className={[
                             "w-12 h-12 shrink-0 rounded-xl overflow-hidden",
-                            "bg-white border border-[#E9E8E2] shadow-soft",
+                            "bg-white border border-[#E5DFD1] shadow-soft",
                             "flex items-center justify-center",
                         ].join(" ")}
                         aria-hidden
@@ -43,7 +43,7 @@ export function SlackCard({ connected, loading, disconnecting, onConnect, onDisc
 
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                            <h4 className="text-[#2F3441] text-[14px] font-semibold tracking-tight">Slack</h4>
+                            <h4 className="text-[#24231F] text-[14px] font-semibold tracking-tight">Slack</h4>
                             {loading ? (
                                 <span className="text-[11px] text-ink-subtle">Checking…</span>
                             ) : connected ? (

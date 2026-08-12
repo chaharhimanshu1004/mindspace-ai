@@ -12,25 +12,38 @@ export const Input = forwardRef<HTMLInputElement, Props>(function Input(
     ref,
 ) {
     const inputId = id ?? rest.name;
+    const errorId = error ? `${inputId}-error` : undefined;
+
     return (
-        <label htmlFor={inputId} className="block">
-            <span className="block text-sm text-ink-muted mb-1.5">{label}</span>
+        <div>
+            <label
+                htmlFor={inputId}
+                className="mb-2 block text-body-sm font-semibold text-ink"
+            >
+                {label}
+            </label>
             <input
                 id={inputId}
                 ref={ref}
+                aria-invalid={error ? true : undefined}
+                aria-describedby={errorId}
                 className={[
-                    "w-full h-11 px-3.5 rounded-xl bg-white",
-                    "border border-border-subtle text-ink placeholder-ink-subtle",
-                    "transition-all duration-200 ease-calm",
-                    "focus:outline-none focus:border-indigo-soft/60 focus:ring-2 focus:ring-indigo-soft/15",
-                    error ? "border-rose-300 focus:border-rose-400 focus:ring-rose-200/50" : "",
+                    "h-11 w-full rounded-control bg-surface-1 px-3.5 text-body text-ink",
+                    "border placeholder:text-ink-subtle",
+                    "transition-colors duration-fast ease-standard",
+                    "focus:outline-none focus-visible:shadow-ring",
+                    error
+                        ? "border-danger-line focus:border-danger-fg"
+                        : "border-border-interactive focus:border-ink",
                     className ?? "",
                 ].join(" ")}
                 {...rest}
             />
             {error ? (
-                <span className="block mt-1.5 text-xs text-rose-500">{error}</span>
+                <p id={errorId} className="mt-2 text-body-sm text-danger-fg">
+                    {error}
+                </p>
             ) : null}
-        </label>
+        </div>
     );
 });

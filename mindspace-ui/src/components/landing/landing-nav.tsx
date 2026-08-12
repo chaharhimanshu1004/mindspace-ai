@@ -6,16 +6,16 @@ import { navLinks } from "./nav-links";
 
 export function LandingNav() {
     return (
-        <header className="sticky top-0 z-50 border-b border-[#E9E8E2] bg-[#FAFAF7]/80 backdrop-blur-md">
-            <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 sm:px-10">
+        <header className="sticky top-0 z-50 border-b border-border-subtle bg-paper/90 backdrop-blur-md">
+            <div className="mx-auto flex min-h-[4.5rem] max-w-content items-center justify-between gap-6 px-11 py-3.5 sm:px-16 lg:px-20">
                 <BrandMark href="/" />
 
-                <nav className="hidden items-center gap-1 md:flex">
+                <nav aria-label="Primary" className="hidden items-center gap-1 sm:flex">
                     {navLinks.map((link) => (
                         <Link
                             key={link.href}
                             href={link.href}
-                            className="rounded-xl px-3 py-2 text-sm font-semibold text-[#6B7280] transition-colors duration-300 ease-calm hover:text-[#2F3441]"
+                            className="rounded-control px-3.5 py-2 text-body font-semibold text-ink-muted transition-colors duration-fast ease-standard hover:bg-surface-3 hover:text-ink focus:outline-none focus-visible:shadow-ring"
                         >
                             {link.label}
                         </Link>

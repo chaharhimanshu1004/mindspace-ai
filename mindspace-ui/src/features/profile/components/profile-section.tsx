@@ -37,7 +37,7 @@ export function ProfileSection() {
 
     return (
         <div>
-            <h3 className="text-[16px] font-bold tracking-tight text-[#2F3441]">Profile</h3>
+            <h3 className="text-[16px] font-bold tracking-tight text-[#24231F]">Profile</h3>
             <p className="mt-1 text-[13px] text-ink-muted">Your identity inside MindSpace.</p>
 
             <div className="mt-6 flex items-center gap-4">
@@ -47,7 +47,7 @@ export function ProfileSection() {
                         "bg-gradient-to-br from-indigo-soft to-indigo-hover",
                         "flex items-center justify-center",
                         "text-white text-xl font-medium",
-                        "shadow-[0_4px_14px_-4px_rgba(99,102,241,0.45)]",
+                        "shadow-[0_4px_14px_-4px_rgba(36,35,31,0.45)]",
                     ].join(" ")}
                     aria-hidden
                 >
@@ -61,7 +61,7 @@ export function ProfileSection() {
                 </div>
             </div>
 
-            <div className="mt-6 bg-white border border-[#E9E8E2] rounded-2xl px-4 shadow-soft">
+            <div className="mt-6 bg-white border border-[#E5DFD1] rounded-2xl px-4 shadow-soft">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4 py-3 border-b border-[#F1F0EB]">
                     <span className="text-[13px] text-ink-muted shrink-0">Name</span>
                     {editing ? (

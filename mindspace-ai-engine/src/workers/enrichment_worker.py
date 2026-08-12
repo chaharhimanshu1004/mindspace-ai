@@ -136,7 +136,7 @@ class EnrichmentWorker:
             len(bundle.result.entities),
         )
 
-        calendar_event = await self._write_enrichment(
+        calendar_event = await self._write_enrichment( # db call for storing everything in db !, entities as well
             memory_id=memory_id, user_id=user_id, bundle=bundle
         )
         logger.info("Memory %s — Stage B persisted (status=enriched)", memory_id)

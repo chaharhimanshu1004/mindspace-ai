@@ -37,11 +37,11 @@ export function ChatComposer({ pending, onSubmit }: Props) {
     return (
         <div
             className={[
-                "bg-white/80 backdrop-blur-sm",
-                "border border-border-subtle rounded-3xl shadow-soft",
+                "bg-surface-1 backdrop-blur-sm",
+                "border border-border-subtle rounded-card shadow-card",
                 "p-3 flex items-end gap-2",
-                "transition-all duration-300 ease-calm",
-                "focus-within:shadow-lift focus-within:border-ink/10",
+                "transition-all duration-base ease-standard",
+                "focus-within:shadow-card-hover focus-within:border-ink/10",
             ].join(" ")}
         >
             <textarea
@@ -54,8 +54,8 @@ export function ChatComposer({ pending, onSubmit }: Props) {
                 disabled={pending}
                 className={[
                     "flex-1 resize-none bg-transparent",
-                    "text-ink placeholder-ink-subtle",
-                    "px-3 py-2 text-[15px] leading-relaxed",
+                    "text-ink placeholder:text-ink-subtle",
+                    "px-3 py-2 text-body leading-relaxed",
                     "focus:outline-none disabled:opacity-50",
                     "max-h-[200px]",
                 ].join(" ")}

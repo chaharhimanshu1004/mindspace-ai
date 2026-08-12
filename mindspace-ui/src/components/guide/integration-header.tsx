@@ -13,10 +13,10 @@ export function IntegrationHeader({ icon, brand, title, tagline }: Props) {
         <div className="flex items-center gap-4">
             <BrandTile icon={icon} brand={brand} />
             <div>
-                <h3 className="text-[19px] font-bold tracking-tight text-[#2F3441]">
+                <h3 className="text-[19px] font-bold tracking-tight text-[#24231F]">
                     {title}
                 </h3>
-                <p className="text-[13.5px] text-[#6B7280]">{tagline}</p>
+                <p className="text-[13.5px] text-[#57524A]">{tagline}</p>
             </div>
         </div>
     );

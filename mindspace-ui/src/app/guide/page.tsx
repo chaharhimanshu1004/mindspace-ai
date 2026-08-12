@@ -12,7 +12,7 @@ import { ReferenceSection } from "@/components/guide/sections/reference-section"
 
 export default function GuidePage() {
     return (
-        <main className="relative min-h-screen bg-[#FAFAF7]">
+        <main className="relative min-h-screen bg-[#FAF7F0]">
             <LandingBackground />
             <LandingNav />
 
@@ -25,11 +25,11 @@ export default function GuidePage() {
 
                 <article className="min-w-0 flex-1 space-y-20">
                     <header>
-                        <h1 className="text-[36px] font-bold leading-[1.05] tracking-tight text-[#2F3441] sm:text-[48px]">
+                        <h1 className="text-[36px] font-bold leading-[1.05] tracking-tight text-[#24231F] sm:text-[48px]">
                             MindSpace{" "}
-                            <span className="text-[#6366F1]">Guide</span>
+                            <span className="text-[#24231F]">Guide</span>
                         </h1>
-                        <p className="mt-4 max-w-2xl text-lg leading-relaxed text-[#6B7280]">
+                        <p className="mt-4 max-w-2xl text-lg leading-relaxed text-[#57524A]">
                             Everything you need to capture, connect, and recall
                             your thoughts — from first sign-in to wiring up
                             Claude, Slack, Telegram, and Google Calendar.

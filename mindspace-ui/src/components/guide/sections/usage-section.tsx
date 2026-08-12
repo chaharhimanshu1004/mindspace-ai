@@ -19,11 +19,11 @@ export function UsageSection() {
                     ].map(([k, v]) => (
                         <li
                             key={k}
-                            className="flex gap-3 rounded-2xl border border-[#E9E8E2] bg-white/70 px-4 py-3 shadow-soft backdrop-blur"
+                            className="flex gap-3 rounded-2xl border border-[#E5DFD1] bg-white/70 px-4 py-3 shadow-soft backdrop-blur"
                         >
-                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#6366F1]" />
-                            <p className="text-[14px] leading-relaxed text-[#6B7280]">
-                                <span className="font-semibold text-[#2F3441]">
+                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#24231F]" />
+                            <p className="text-[14px] leading-relaxed text-[#57524A]">
+                                <span className="font-semibold text-[#24231F]">
                                     {k}
                                 </span>{" "}
                                 — {v}
@@ -40,9 +40,9 @@ export function UsageSection() {
                 intro="Recall is semantic — ask the way you think, not the way you filed it."
             >
                 <div className="space-y-4">
-                    <p className="text-[14.5px] leading-relaxed text-[#6B7280]">
+                    <p className="text-[14.5px] leading-relaxed text-[#57524A]">
                         From the Ask page (or Telegram&rsquo;s{" "}
-                        <code className="rounded bg-[#EEF0FF] px-1.5 py-0.5 font-mono text-[12px] text-[#6366F1]">
+                        <code className="rounded bg-[#F1EEE6] px-1.5 py-0.5 font-mono text-[12px] text-[#24231F]">
                             /ask
                         </code>
                         ), pose a question in plain language. MindSpace embeds

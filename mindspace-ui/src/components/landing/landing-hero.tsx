@@ -1,42 +1,62 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { MemoryNetwork } from "./memory-network";
+import { ArrowRight, Globe } from "lucide-react";
+import { HeroArt } from "./hero-art";
+import { HeroSources } from "./hero-sources";
+import { InlineBrand } from "./inline-brand";
+import { ScrollCue } from "./scroll-cue";
+import { SlackIcon } from "./icons/slack-icon";
+import { TelegramIcon } from "./icons/telegram-icon";
+import { AnthropicIcon } from "./icons/anthropic-icon";
 
 export function LandingHero() {
     return (
-        <section className="mx-auto max-w-6xl px-6 pb-10 pt-16 sm:px-10 lg:pt-20">
-            <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-8">
-                <div className="w-full max-w-xl text-center lg:flex-1 lg:text-left">
-                    <h1 className="text-[40px] font-bold leading-[1.05] tracking-tight text-[#2F3441] sm:text-[56px]">
-                        MindSpace AI.
-                        <span className="mt-1 block font-semibold text-[#2F3441]">
-                            Your Personal{" "}
-                            <span className="text-[#6366F1]">
-                                Memory Infrastructure.
-                            </span>
-                        </span>
+        <section className="relative mx-auto flex min-h-[calc(100svh-4.5rem)] max-w-content flex-col justify-center px-11 pb-24 pt-12 sm:px-16 lg:px-20">
+            <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-14">
+                <div className="w-full lg:flex-1">
+                    <h1 className="ink-weight max-w-[17ch] font-display text-[38px] leading-[1.08] tracking-[-0.022em] text-ink sm:text-display-xl">
+                        Never lose a thought again.
                     </h1>
 
-                    <p className="mx-auto mt-6 max-w-md text-lg leading-relaxed text-[#6B7280] lg:mx-0">
-                        An animated, ever-running memory network that captures
-                        your thoughts and interconnects them into one
-                        intelligent, searchable mind.
+                    <p className="mt-6 max-w-[48ch] text-body-lg text-ink-muted">
+                        Thoughts from{" "}
+                        <InlineBrand icon={Globe} label="the web" />,{" "}
+                        <InlineBrand icon={SlackIcon} label="Slack" />,{" "}
+                        <InlineBrand icon={TelegramIcon} label="Telegram" /> and{" "}
+                        <InlineBrand icon={AnthropicIcon} label="Claude Code" />, embedded
+                        into one index you can question.
                     </p>
 
-                    <div className="mt-9 flex justify-center lg:justify-start">
+                    <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
                         <Link
                             href="/signup"
-                            className="group inline-flex items-center gap-2 rounded-full bg-[#6366F1] px-8 py-3.5 font-medium text-white shadow-soft transition-all duration-300 ease-calm hover:bg-[#5457E0] hover:shadow-lift"
+                            className="group inline-flex h-11 items-center gap-2 rounded-control bg-ink px-6 text-body font-semibold text-paper transition-colors duration-fast ease-standard hover:bg-ink/90 focus:outline-none focus-visible:shadow-ring"
                         >
-                            Get Started
-                            <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-calm group-hover:translate-x-0.5" />
+                            Get started
+                            <ArrowRight
+                                aria-hidden
+                                className="h-4 w-4 transition-transform duration-fast ease-standard group-hover:translate-x-0.5"
+                            />
                         </Link>
+                        <Link
+                            href="/guide"
+                            className="rounded-control text-body font-semibold text-ink underline decoration-border-strong decoration-2 underline-offset-4 transition-colors duration-fast ease-standard hover:decoration-ink focus:outline-none focus-visible:shadow-ring"
+                        >
+                            Read the guide
+                        </Link>
+                    </div>
+
+                    <div className="mt-10 border-t border-border-subtle pt-5">
+                        <HeroSources />
                     </div>
                 </div>
 
                 <div className="w-full lg:flex-1">
-                    <MemoryNetwork />
+                    <HeroArt />
                 </div>
+            </div>
+
+            <div className="absolute inset-x-0 bottom-7 flex justify-center px-11 sm:px-16">
+                <ScrollCue href="#pipeline" label="how it works" />
             </div>
         </section>
     );

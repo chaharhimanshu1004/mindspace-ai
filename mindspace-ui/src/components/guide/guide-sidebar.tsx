@@ -31,7 +31,7 @@ export function GuideSidebar() {
         <nav className="space-y-7">
             {guideNav.map((group) => (
                 <div key={group.title}>
-                    <p className="px-3 text-[11px] font-bold uppercase tracking-[0.16em] text-[#9CA3AF]">
+                    <p className="px-3 text-[11px] font-bold uppercase tracking-[0.16em] text-[#8A8271]">
                         {group.title}
                     </p>
                     <ul className="mt-2 space-y-0.5">
@@ -44,8 +44,8 @@ export function GuideSidebar() {
                                         className={[
                                             "block rounded-xl px-3 py-1.5 text-sm transition-all duration-300 ease-calm",
                                             isActive
-                                                ? "bg-gradient-to-r from-[#EEF0FF] to-[#F5F3FF] font-semibold text-[#6366F1]"
-                                                : "font-medium text-[#6B7280] hover:bg-[#2F3441]/5 hover:text-[#2F3441]",
+                                                ? "bg-gradient-to-r from-[#F1EEE6] to-[#F1EEE6] font-semibold text-[#24231F]"
+                                                : "font-medium text-[#57524A] hover:bg-[#24231F]/5 hover:text-[#24231F]",
                                         ].join(" ")}
                                     >
                                         {item.label}

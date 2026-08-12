@@ -7,6 +7,7 @@ import { loginSchema, type LoginValues } from "../auth.schemas";
 import { useLogin } from "../hooks/use-login";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Divider } from "@/components/ui/divider";
 import { GoogleSigninButton } from "./google-signin-button";
 
 export function LoginForm() {
@@ -24,14 +25,10 @@ export function LoginForm() {
     const onSubmit = (values: LoginValues) => mutation.mutate(values);
 
     return (
-        <div className="space-y-5">
+        <div className="space-y-6">
             <GoogleSigninButton />
 
-            <div className="flex items-center gap-3">
-                <div className="h-px flex-1 bg-[#E5E7EB]" />
-                <span className="text-[12px] font-medium text-[#9CA3AF]">or</span>
-                <div className="h-px flex-1 bg-[#E5E7EB]" />
-            </div>
+            <Divider label="or" />
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <Input
@@ -53,7 +50,7 @@ export function LoginForm() {
                 <Button
                     type="submit"
                     size="lg"
-                    className="w-full mt-2"
+                    className="mt-2 w-full"
                     loading={mutation.isPending}
                 >
                     Continue

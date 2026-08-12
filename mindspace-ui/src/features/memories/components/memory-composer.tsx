@@ -9,9 +9,9 @@ import { createMemorySchema } from "../memory.schemas";
 const MAX_HEIGHT_PX = 180;
 
 const SOURCE_HINTS: Record<string, string> = {
-    claude_code: "Memories from Claude are synced automatically — you can't add them directly",
-    slack: "Memories from Slack are synced automatically — you can't add them directly",
-    telegram: "Memories from Telegram are synced automatically — you can't add them directly",
+    claude_code: "Claude Code memories arrive on their own — nothing to type here",
+    slack: "Slack memories arrive on their own — nothing to type here",
+    telegram: "Telegram memories arrive on their own — nothing to type here",
 };
 
 interface Props {
@@ -59,16 +59,15 @@ export function MemoryComposer({ disabled = false, disabledSource }: Props) {
     };
 
     const canSend = !disabled && value.trim().length > 0 && !mutation.isPending;
+    const hint = disabledSource ? SOURCE_HINTS[disabledSource] : undefined;
 
     return (
-        <div className="fixed inset-x-0 bottom-0 z-30 pointer-events-none">
-            <div className="pointer-events-auto mx-auto max-w-3xl px-4 sm:px-6 pb-5 sm:pb-7">
+        <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30">
+            <div className="pointer-events-auto mx-auto max-w-prose px-6 pb-6 sm:px-10">
                 <div
                     className={[
-                        "flex items-end gap-2 p-2",
-                        "bg-white/85 backdrop-blur-xl",
-                        "border border-border-subtle rounded-3xl shadow-lift",
-                        disabled ? "opacity-60" : "",
+                        "flex items-end gap-2 rounded-card border bg-surface-1 p-2 shadow-card",
+                        disabled ? "border-border-subtle opacity-70" : "border-border-interactive",
                     ].join(" ")}
                 >
                     <textarea
@@ -78,13 +77,11 @@ export function MemoryComposer({ disabled = false, disabledSource }: Props) {
                         onKeyDown={onKeyDown}
                         disabled={disabled}
                         rows={1}
-                        placeholder={disabled && disabledSource && SOURCE_HINTS[disabledSource] ? SOURCE_HINTS[disabledSource] : "Add a thought…"}
+                        aria-label="Write a note"
+                        placeholder={disabled ? (hint ?? "Notes are added from All or Web") : "Write a note…"}
                         className={[
-                            "flex-1 resize-none bg-transparent",
-                            "px-3 py-2.5 text-[15px] leading-relaxed",
-                            "text-ink placeholder-ink-subtle",
-                            "focus:outline-none",
-                            "max-h-[180px]",
+                            "max-h-[180px] flex-1 resize-none bg-transparent px-3 py-2.5",
+                            "text-body text-ink placeholder:text-ink-subtle focus:outline-none",
                             disabled ? "cursor-not-allowed" : "",
                         ].join(" ")}
                     />
@@ -92,31 +89,29 @@ export function MemoryComposer({ disabled = false, disabledSource }: Props) {
                         type="button"
                         onClick={send}
                         disabled={!canSend}
-                        aria-label="Save memory"
+                        aria-label="Save note"
                         className={[
-                            "inline-flex items-center justify-center",
-                            "w-11 h-11 rounded-2xl shrink-0",
-                            "transition-all duration-300 ease-calm",
-                            "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-soft/40 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+                            "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-control",
+                            "transition-colors duration-fast ease-standard",
+                            "focus:outline-none focus-visible:shadow-ring",
                             canSend
-                                ? "bg-gradient-to-br from-[#818CF8] to-[#6366F1] text-white shadow-soft hover:shadow-lift"
-                                : "bg-canvas text-ink-subtle border border-border-subtle",
+                                ? "bg-ink text-paper hover:bg-ink/90"
+                                : "border border-border-subtle bg-surface-2 text-ink-subtle",
                         ].join(" ")}
                     >
                         {mutation.isPending ? (
-                            <span className="text-sm">…</span>
+                            <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                         ) : (
-                            <ArrowUp className="h-[18px] w-[18px]" />
+                            <ArrowUp aria-hidden className="h-[18px] w-[18px]" />
                         )}
                     </button>
                 </div>
-                <p className="mt-2 text-center text-[11px] text-ink-subtle">
-                    {disabled && disabledSource && SOURCE_HINTS[disabledSource]
-                        ? SOURCE_HINTS[disabledSource]
-                        : disabled
-                            ? "Notes can only be added from My Notes"
-                            : "enter to save · shift + enter for a new line"}
-                </p>
+
+                {disabled ? null : (
+                    <p className="mt-2.5 text-center font-mono text-[12px] text-ink-subtle">
+                        enter to save · shift + enter for a new line
+                    </p>
+                )}
             </div>
         </div>
     );

@@ -95,13 +95,12 @@ export function OtpForm() {
     return (
         <div className="space-y-6">
             {email && (
-                <p className="text-[14px] text-[#6B7280]">
-                    We sent a 6-digit code to{" "}
-                    <span className="font-semibold text-[#2F3441]">{email}</span>
+                <p className="text-body-sm text-ink-muted">
+                    Code sent to <span className="font-mono text-ink">{email}</span>
                 </p>
             )}
 
-            <div className="flex gap-2.5">
+            <div className="flex gap-2">
                 {digits.map((digit, i) => (
                     <input
                         key={i}
@@ -111,15 +110,16 @@ export function OtpForm() {
                         maxLength={1}
                         value={digit}
                         autoFocus={i === 0}
+                        aria-label={`Digit ${i + 1} of ${OTP_LENGTH}`}
                         onChange={(e) => handleChange(i, e.target.value)}
                         onKeyDown={(e) => handleKeyDown(i, e)}
                         onPaste={handlePaste}
                         className={[
-                            "w-full h-14 text-center text-2xl font-bold rounded-xl bg-white",
-                            "border border-[#E5E7EB] text-[#2F3441]",
-                            "transition-all duration-200",
-                            "focus:outline-none focus:border-[#6366F1] focus:ring-2 focus:ring-[#6366F1]/20",
-                            digit ? "border-[#6366F1] bg-[#F5F3FF]" : "",
+                            "h-14 w-full rounded-control bg-surface-1 text-center",
+                            "font-mono text-[22px] text-ink",
+                            "border transition-colors duration-fast ease-standard",
+                            "focus:outline-none focus-visible:shadow-ring focus:border-ink",
+                            digit ? "border-ink" : "border-border-interactive",
                         ].join(" ")}
                     />
                 ))}
@@ -136,12 +136,12 @@ export function OtpForm() {
                 Verify email
             </Button>
 
-            <div className="text-center">
+            <div className="flex justify-center">
                 <button
                     type="button"
                     onClick={handleResend}
                     disabled={cooldown > 0 || resendMutation.isPending}
-                    className="text-sm text-[#6366F1] font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+                    className="rounded-control text-body-sm font-semibold text-ink underline decoration-border-strong decoration-2 underline-offset-4 transition-colors duration-fast ease-standard hover:decoration-ink disabled:no-underline disabled:opacity-45 focus:outline-none focus-visible:shadow-ring"
                 >
                     {cooldown > 0 ? `Resend code in ${cooldown}s` : "Resend code"}
                 </button>

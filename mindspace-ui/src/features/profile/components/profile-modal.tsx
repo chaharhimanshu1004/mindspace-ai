@@ -39,10 +39,10 @@ export function ProfileModal({ open, onClose }: Props) {
 
     return (
         <Modal open={open} onClose={onClose} labelledBy="profile-modal-title">
-            <header className="flex items-center justify-between px-6 sm:px-7 h-14 border-b border-[#E9E8E2] bg-white/80 backdrop-blur-sm shrink-0">
+            <header className="flex items-center justify-between px-6 sm:px-7 h-14 border-b border-[#E5DFD1] bg-white/80 backdrop-blur-sm shrink-0">
                 <h2
                     id="profile-modal-title"
-                    className="text-[15px] font-bold tracking-tight text-[#2F3441]"
+                    className="text-[15px] font-bold tracking-tight text-[#24231F]"
                 >
                     Settings
                 </h2>
@@ -52,7 +52,7 @@ export function ProfileModal({ open, onClose }: Props) {
                     aria-label="Close settings"
                     className={[
                         "w-8 h-8 rounded-full flex items-center justify-center",
-                        "text-[#9CA3AF] hover:text-[#2F3441] hover:bg-[#2F3441]/5",
+                        "text-[#8A8271] hover:text-[#24231F] hover:bg-[#24231F]/5",
                         "transition-colors duration-200 ease-calm",
                         "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-soft/40",
                     ].join(" ")}

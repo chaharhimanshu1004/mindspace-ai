@@ -7,7 +7,7 @@ interface Props {
 
 export function MemoryGrid({ memories }: Props) {
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {memories.map((m) => (
                 <MemoryCard key={m.id} memory={m} />
             ))}

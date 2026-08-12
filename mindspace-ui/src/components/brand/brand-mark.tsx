@@ -1,18 +1,20 @@
 import Link from "next/link";
-import { BrainCircuit } from "lucide-react";
+import { BrandGlyph } from "./brand-glyph";
 
-export function BrandMark({ href = "/" }: { href?: string }) {
+interface Props {
+    href?: string;
+}
+
+export function BrandMark({ href = "/" }: Props) {
     return (
         <Link
             href={href}
-            className="flex items-center gap-2.5"
             aria-label="MindSpace AI home"
+            className="group inline-flex items-center gap-2.5 rounded-control text-ink focus:outline-none focus-visible:shadow-ring"
         >
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[#6366F1] text-white shadow-soft">
-                <BrainCircuit className="h-[18px] w-[18px]" />
-            </span>
-            <span className="text-[15px] font-bold tracking-tight text-[#2F3441]">
-                MindSpace AI
+            <BrandGlyph className="h-[19px] w-[19px] shrink-0 transition-transform duration-fast ease-standard group-hover:-translate-y-px" />
+            <span className="ink-weight font-display text-[20px] leading-none tracking-[-0.015em]">
+                MindSpace
             </span>
         </Link>
     );

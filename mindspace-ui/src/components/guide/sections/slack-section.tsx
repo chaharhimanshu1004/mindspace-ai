@@ -12,7 +12,7 @@ export function SlackSection() {
             title="Slack"
             intro="Turn ambient team chatter into clean, recallable memory. MindSpace listens to the channels you choose and rolls them up — without flooding your memory store."
         >
-            <div className="rounded-3xl border border-[#E9E8E2] bg-white/70 p-6 shadow-soft backdrop-blur sm:p-8">
+            <div className="rounded-3xl border border-[#E5DFD1] bg-white/70 p-6 shadow-soft backdrop-blur sm:p-8">
                 <IntegrationHeader
                     icon={SlackIcon}
                     brand
