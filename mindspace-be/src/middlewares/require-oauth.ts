@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import { env } from "../config/env";
 import { OAuthService } from "../services/oauth.service";
 import { AppError } from "../errors/app-error";
 import { insufficientScopeError, invalidTokenError } from "../errors/oauth-errors";
@@ -11,15 +12,26 @@ const extractBearer = (header: string | undefined): string | null => {
     return value.trim();
 };
 
+const RESOURCE_METADATA_URL = `${env.API_URL}/.well-known/oauth-protected-resource/mcp`;
+
+const errorParam = (code: string): string | null => {
+    if (code === "INVALID_TOKEN" || code === "INVALID_GRANT") return "invalid_token";
+    if (code === "INSUFFICIENT_SCOPE") return "insufficient_scope";
+    return null;
+};
+
 const setWwwAuthenticate = (res: Response, err: unknown): void => {
-    if (!(err instanceof AppError)) return;
-    const parts = [`Bearer realm="mindspace"`];
-    if (err.code === "INVALID_TOKEN" || err.code === "INVALID_GRANT") {
-        parts.push(`error="invalid_token"`);
-    } else if (err.code === "INSUFFICIENT_SCOPE") {
-        parts.push(`error="insufficient_scope"`);
+    const parts = [
+        `Bearer realm="mindspace"`,
+        `resource_metadata="${RESOURCE_METADATA_URL}"`,
+    ];
+
+    if (err instanceof AppError) {
+        const param = errorParam(err.code);
+        if (param) parts.push(`error="${param}"`);
+        parts.push(`error_description="${err.message.replace(/"/g, "'")}"`);
     }
-    parts.push(`error_description="${err.message.replace(/"/g, "'")}"`);
+
     res.setHeader("WWW-Authenticate", parts.join(", "));
 };
 
